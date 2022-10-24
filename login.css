@@ -1,0 +1,26 @@
+h1 {
+	text-align: center;
+	font-family: "Avenir Next";
+}
+
+h2 {
+	text-align: center;
+	font-family: "Avenir Next";
+}
+
+.input {
+	margin: auto;
+	text-align: center;
+	border: 3px solid #34ebdb;
+	border-radius: 4px;
+	background-color: white;
+	width: 20%;
+}
+
+.image {
+	text-align: center;
+}
+
+body {
+	background-color: #faee0f;
+}
