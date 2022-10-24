@@ -20,6 +20,11 @@ h2 {
 .image {
 	text-align: center;
 }
+.image1 {
+	text-align: center;
+	display: block;
+	margin: auto;
+  }
 
 body {
 	background-color: #FFEE02;
