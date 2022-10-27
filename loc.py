@@ -11,6 +11,9 @@ FILE = 'location_history.json'
 # date = str(input("Date (XXXX/XX/XX): "))
 
 
+
+
+
 # Main
 FILE = open('location_history.json')
 file = json.load(FILE)
