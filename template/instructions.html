@@ -1,0 +1,84 @@
+<html>
+	<head>
+		<title>
+		Login: SNATA
+		</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+	</head>
+	<body>
+		<br>
+		<br>
+		<h1>
+			How to request your data from Snapchat:
+		</h1>
+        <br>
+        <div class="image1">
+        <h2>
+            Step 1: Log into <a href="https://accounts.snapchat.com/accounts/login" target="_blank">https://accounts.snapchat.com</a>
+            <br />
+            <br />
+            <form action="https://accounts.snapchat.com/accounts/login" target="_blank">
+                <button class="button-27" type="submit" role="button">LOG INTO SNAPCHAT</button>
+            </form>
+            <br>
+            Step 2: Click on 'MY DATA'
+            <br>
+            <br>
+            <img src="{{ url_for('static', filename='css/step1.png') }}" width="50%">
+            <br>
+            <br>
+            <br>
+            Step 3: Scroll to the bottom of this page
+            <br>
+            <br>
+            <img src="{{ url_for('static', filename='css/step2.png') }}" width="50%">
+            <br>
+            <br>
+            <br>
+            Step 4: Unselect option to filter export by date range
+            <br>
+            <br>
+            <img src="{{ url_for('static', filename='css/step3.png') }}">
+            <br>
+            <br>
+            <br>
+            Step 5: Enter your Snapchat email address and click Submit Request
+            <br>
+            <br>
+            <img src="{{ url_for('static', filename='css/step4.png') }}">
+            <br>
+            <br>
+            <img src="{{ url_for('static', filename='css/step5.png') }}" width="50%">
+            <br>
+            <br>
+            <br>
+            Once you have submitted your request, you will receive an email from Snapchat with a link to download your data. 
+            <br>
+            <br>
+            It should look like this:
+            <br>
+            <br>
+            <img src="{{ url_for('static', filename='css/step6.png') }}" width="50%">
+            <br>
+            <br>
+            <br>
+            Next, download your .zip file and upload it to SNATA!
+
+        </h2>
+    </div>
+		<div class="image">
+			<br />
+
+		</div>
+        <form action="{{ url_for('site') }}">
+            <button class="button-27" type="submit" role="button">GO BACK</button>
+        </form>
+		<br>
+		<div class="image" width="25%">
+			<img src="{{ url_for('static', filename='css/snapchat_bounce.gif') }}" width=175 height=125 >
+		</div>
+		
+
+	</body>
+
+</html>
