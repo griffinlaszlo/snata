@@ -1,6 +1,26 @@
 from flask import Flask, request, url_for, redirect, render_template
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate, migrate
 
 app = Flask(__name__, template_folder='template')
+app.debug = True
+
+# adding configuration for using a sqlite database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+ 
+# Creating an SQLAlchemy instance
+db = SQLAlchemy(app)
+
+# Settings for migrations
+migrate = Migrate(app, db)
+
+# Models go here
+class Users(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	username = db.Column(db.String(20), unique=True, nullable=False)
+
+	def __repr__(self):
+		return f'ID : {self.id}, Name : {self.username}'
 
 @app.route('/')
 def site():
