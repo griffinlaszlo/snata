@@ -31,20 +31,19 @@ class Users(db.Model):
 
 @app.route('/', methods=['GET', 'POST'])
 def site():
-	print('SITE PAGE')
 	if request.method == 'POST':
 		file = request.files['data_zip_file']
 
-		user = Users(username="test_user", filename=file.filename, data=file.read())
-		db.session.add(user)
-		db.session.commit()
+		user = Users(username="test_user_2", filename=file.filename, data=file.read())
+		if user.filename != "":
+			db.session.add(user)
+			db.session.commit()
 
-		return f'Uploaded: {file.filename}'
+			return f'Uploaded: {file.filename}'
 	return render_template('site.html')
 
 @app.route('/homePage', methods=['GET', 'POST'])
 def homePage():
-	print('HELLO')
 	if request.method == 'POST':
         # do stuff when the form is submitted
 
