@@ -34,16 +34,22 @@
 		<br>
 		
 		<div class="input">
-				<input type="file" accept=".zip"/>
-
+			<form method="POST" action="" enctype="multipart/form-data">
+				<input name='data_zip_file' type="file" accept=".zip"/>
+				<div class="image">
+					<br />
+					<form action="{{ url_for('homePage') }}">
+						<button class="button-27" type="submit" role="button">SHOW DATA</button>
+					</form>
+				</div>
 			</form>
 		</div>
-		<div class="image">
+		<!-- <div class="image">
 			<br />
 			<form action="{{ url_for('homePage') }}">
 				<button class="button-27" type="submit" role="button">SHOW DATA</button>
 			</form>
-		</div>
+		</div> -->
 
 		<br>
 		<div class="image">
