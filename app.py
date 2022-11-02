@@ -34,7 +34,7 @@ def site():
 	if request.method == 'POST':
 		file = request.files['data_zip_file']
 
-		user = Users(username="test_user_2", filename=file.filename, data=file.read())
+		user = Users(username="noahhotai", filename=file.filename, data=file.read())
 		if user.filename != "":
 			db.session.add(user)
 			db.session.commit()
