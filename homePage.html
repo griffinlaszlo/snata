@@ -10,5 +10,12 @@
 			We received your (.zip) file! This is your home page!
 		</h1>
 		<br>
+		{% for post in post %}
+		<div class="post">
+			<p>{{ post['id'] }}</p>
+			<p>{{ post['username'] }}</p>
+			<p>{{ post['filename'] }}</p>
+		</div>
+		{% endfor %}
 	</body>
 </html>

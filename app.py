@@ -1,3 +1,4 @@
+import sqlite3
 from flask import Flask, request, url_for, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, migrate
@@ -31,25 +32,41 @@ class Users(db.Model):
 
 @app.route('/', methods=['GET', 'POST'])
 def site():
+	post = []
 	if request.method == 'POST':
 		file = request.files['data_zip_file']
 
-		user = Users(username="test_user_2", filename=file.filename, data=file.read())
+		user = Users(username="test_user_4", filename=file.filename, data=file.read())
 		if user.filename != "":
 			db.session.add(user)
 			db.session.commit()
 
-			return f'Uploaded: {file.filename}'
-	return render_template('site.html')
+			#return f'Uploaded: {file.filename}'
+
+		conn = get_db_connection()
+		post = conn.execute('SELECT * FROM Users').fetchall()
+		conn.close()
+
+	return render_template('homePage.html', post=post)
+
+def get_db_connection():
+	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+	db_path = os.path.join(BASE_DIR, "instance/site.db")
+	conn = sqlite3.connect(db_path)
+	conn.row_factory = sqlite3.Row
+	return conn
 
 @app.route('/homePage', methods=['GET', 'POST'])
 def homePage():
-	if request.method == 'POST':
+	conn = get_db_connection()
+	post = conn.execute('SELECT * FROM Users').fetchall()
+	conn.close()
+	#if request.method == 'POST':
         # do stuff when the form is submitted
 
         # redirect to end the POST handling
         # the redirect can be to the same route or somewhere else
-		return redirect(url_for('site'))
+		#return redirect(url_for('site'))
 
     # show the form, it wasn't submitted
 	return render_template('homePage.html')
