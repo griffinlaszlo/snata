@@ -36,11 +36,7 @@ def site():
 	if request.method == 'POST':
 		file = request.files['data_zip_file']
 
-<<<<<<< HEAD
 		user = Users(username="test_user_4", filename=file.filename, data=file.read())
-=======
-		user = Users(username="test_user", filename=file.filename, data=file.read())
->>>>>>> origin
 		if user.filename != "":
 			db.session.add(user)
 			db.session.commit()
@@ -51,7 +47,7 @@ def site():
 		post = conn.execute('SELECT * FROM Users').fetchall()
 		conn.close()
 
-	return render_template('homePage.html', post=post)
+	return render_template('site.html', post=post)
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
