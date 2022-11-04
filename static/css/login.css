@@ -1,0 +1,157 @@
+h1 {
+	text-align: center;
+	font-family: "Avenir Next";
+	font-size: 3em;
+   }
+	
+h2 {
+text-align: center;
+font-family: "Avenir Next";
+font-size: 1.5em;
+}
+
+h3 {
+text-align: center;
+font-family: "Avenir Next";
+font-size: 1em;
+
+}
+
+.input {
+margin: auto;
+text-align: center;
+border: 3px solid #34ebdb;
+border-radius: 4px;
+background-color: white;
+width: 20%;
+}
+
+.image {
+text-align: center;
+}
+/* .image1 {
+text-align: center;
+display: block;
+margin: auto;
+} */
+
+body {
+background-color: #FFEE02;
+}
+
+
+/* CSS */
+.button-27 {
+appearance: none;
+background-color: #000000;
+border: 2px solid #1A1A1A;
+border-radius: 15px;
+box-sizing: border-box;
+color: #FFFFFF;
+cursor: pointer;
+font-family: "Avenir Next";
+font-size: 16px;
+font-weight: 600;
+line-height: normal;
+margin: auto;
+min-height: 60px;
+min-width: 0;
+outline: none;
+/* padding: 16px 16px; */
+text-align: center;
+text-decoration: none;
+transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+user-select: none;
+-webkit-user-select: none;
+touch-action: manipulation;
+width: 40%;
+will-change: transform;
+}
+
+.form-container{
+width:250px;
+text-align: center;
+/* padding: 20px 30px; */
+background-color: #FFF;
+color: #FFFFFF;
+border-radius: 10px;
+box-shadow: 0 0 10px 0 #555;
+margin-left: 0; 
+}
+
+ul.list{
+text-align: left;
+font-family: "Avenir Next";
+list-style-type: none;
+background-color: #FFF;
+border-radius: 10px;
+padding: 0px;
+}
+
+
+ul.list li{
+width: 250px;
+margin: auto;
+font-family: "Avenir Next";
+padding: 2px 20px;
+text-align: center;
+
+}
+
+ul.list li input{
+width: 250px;
+text-align: center;
+padding: 8px 0px;
+border:none;
+font-family: "Avenir Next";
+background-color: #DDD;
+border-radius: 5px;
+}
+
+.button-27:disabled {
+pointer-events: none;
+}
+
+.button-27:hover {
+box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+transform: translateY(-2px);
+}
+
+.button-27:active {
+box-shadow: none;
+transform: translateY(0);
+}
+
+/* Split the screen in half */
+/* .split {
+height: 100%;
+width: 50%;
+position: fixed;
+z-index: 1;
+top: 0;
+overflow-x: hidden;
+padding-top: 20px;
+}
+	/* Control the left side */
+.left {
+left: 0;
+
+}
+	/* Control the right side */
+.right {
+right: 0;
+
+}
+	/* If you want the content centered horizontally and vertically */
+.centered {
+position: absolute;
+top: 55%;
+left: 50%;
+transform: translate(-50%, -50%);
+text-align: center;
+}
+	/* Style the image inside the centered container, if needed */
+.centered img {
+width: 150px;
+border-radius: 25%;
+}
