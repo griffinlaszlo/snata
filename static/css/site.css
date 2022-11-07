@@ -64,7 +64,7 @@ body {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  width: 20%;
+  width: 40%;
   will-change: transform;
 }
 

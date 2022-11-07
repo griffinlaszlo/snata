@@ -1,0 +1,21 @@
+h1 {
+	text-align: center;
+	font-family: "Avenir Next";
+	font-size: 3em;
+}
+
+h2 {
+	text-align: center;
+	font-family: "Avenir Next";
+	font-size: 1.5em;
+}
+
+h3 {
+	text-align: center;
+	font-family: "Avenir Next";
+	font-size: 1em;
+}
+
+body {
+	background-color: #FFEE02;
+}

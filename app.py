@@ -2,8 +2,9 @@ import sqlite3
 from flask import Flask, request, url_for, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, migrate
-import zipfile
+from zipfile import ZipFile
 import os
+import json
 
 app = Flask(__name__, template_folder='template')
 app.debug = True
@@ -30,24 +31,93 @@ class Users(db.Model):
 	def __repr__(self):
 		return f'ID : {self.id}, Name : {self.username}'
 
+class Location(db.Model):
+	id = db.Column(db.Integer, unique=True, primary_key=True)
+	username = db.Column(db.String(20), unique=True, nullable=False)
+	filename = db.Column(db.String(50))
+	data = db.Column(db.PickleType)
+
+	def __repr__(self):
+		return f'ID : {self.id}, Name : {self.username}'
+
+class Friends(db.Model):
+	id = db.Column(db.Integer, unique=True, primary_key=True)
+	username = db.Column(db.String(20), unique=True, nullable=False)
+	filename = db.Column(db.String(50))
+	data = db.Column(db.PickleType)
+
+	def __repr__(self):
+		return f'ID : {self.id}, Name : {self.username}'
+
+class ChatHistory(db.Model):
+	id = db.Column(db.Integer, unique=True, primary_key=True)
+	username = db.Column(db.String(20), unique=True, nullable=False)
+	filename = db.Column(db.String(50))
+	data = db.Column(db.PickleType)
+
+	def __repr__(self):
+		return f'ID : {self.id}, Name : {self.username}'
+
+class Account(db.Model):
+	id = db.Column(db.Integer, unique=True, primary_key=True)
+	username = db.Column(db.String(20), unique=True, nullable=False)
+	filename = db.Column(db.String(50))
+	data = db.Column(db.PickleType)
+
+	def __repr__(self):
+		return f'ID : {self.id}, Name : {self.username}'
+
 @app.route('/', methods=['GET', 'POST'])
 def site():
-	post = []
 	if request.method == 'POST':
 		file = request.files['data_zip_file']
 
-		user = Users(username="test_user_4", filename=file.filename, data=file.read())
+		user = Users(username="new_user_26", filename=file.filename, data=file.read())
 		if user.filename != "":
+			with ZipFile(file, 'r') as zip:
+				zip.extractall('uploads')
+
+			with open('uploads/json/location_history.json', encoding="utf8") as json_file:
+				loc = json.load(json_file)
+			location = Location(username="new_user_26", filename="location_history.json", data=loc)
+
+			with open('uploads/json/friends.json', encoding="utf8") as json_file:
+				frien = json.load(json_file)
+			friends = Friends(username="new_user_26", filename='friends.json', data=frien)
+
+			with open('uploads/json/chat_history.json', encoding="utf8") as json_file:
+				chat = json.load(json_file)
+			chat_history = ChatHistory(username="new_user_26", filename='chat_history.json', data=chat)
+
+			with open('uploads/json/account.json', encoding="utf8") as json_file:
+				acct = json.load(json_file)
+			account = Account(username="new_user_26", filename='account', data=acct)
+
 			db.session.add(user)
+			db.session.add(location)
+			db.session.add(friends)
+			db.session.add(chat_history)
+			db.session.add(account)
 			db.session.commit()
+
+			# conn = get_db_connection()
+			# cursor = conn.cursor()
+			# post = cursor.execute('SELECT username FROM Users WHERE username = "new_user_15"').fetchall()
+			# print(post[0]['username'])
+			# conn.close()
 
 			return redirect(url_for('query'))
 
-		conn = get_db_connection()
-		post = conn.execute('SELECT * FROM Users').fetchall()
-		conn.close()
+	return render_template('site.html')
 
-	return render_template('site.html', post=post)
+@app.route('/query', methods=['GET', 'POST'])
+def query():
+	conn = get_db_connection()
+	cursor = conn.cursor()
+	post = cursor.execute('SELECT * FROM Users WHERE username = "new_user_26"').fetchall()
+	conn.close()
+
+	return render_template('query.html', post=post)
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -58,9 +128,9 @@ def get_db_connection():
 
 @app.route('/homePage', methods=['GET', 'POST'])
 def homePage():
-	conn = get_db_connection()
-	post = conn.execute('SELECT * FROM Users').fetchall()
-	conn.close()
+	# conn = get_db_connection()
+	# post = conn.execute('SELECT * FROM Users').fetchall()
+	# conn.close()
 	#if request.method == 'POST':
         # do stuff when the form is submitted
 
