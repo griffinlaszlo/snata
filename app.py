@@ -26,6 +26,11 @@ class Users(db.Model):
 	id = db.Column(db.Integer, unique=True, primary_key=True)
 	username = db.Column(db.String(20), unique=True, nullable=False)
 	filename = db.Column(db.String(50))
+	creation_time = db.Column(db.String(50))
+	recent_location = db.Column(db.String(50))
+	frequent_locations = db.Column(db.Text())
+	recent_snap = db.Column(db.String(50))
+	top3_snappers = db.Column(db.String(100))
 	data = db.Column(db.LargeBinary)
 
 	def __repr__(self):
@@ -72,26 +77,109 @@ def site():
 	if request.method == 'POST':
 		file = request.files['data_zip_file']
 
-		user = Users(username="new_user_26", filename=file.filename, data=file.read())
-		if user.filename != "":
+		if file.filename != "":
 			with ZipFile(file, 'r') as zip:
 				zip.extractall('uploads')
 
+			db_username = "new_user_3"
+			# from the user_profile.json grab creation time
+			months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+			with open('uploads/json/user_profile.json', encoding="utf8") as user_json:
+				user_profile = json.load(user_json)
+				for key, value in user_profile.items():
+					if (key == 'App Profile'):
+						for key, value in value.items():
+							if (key == 'Creation Time'):
+								year, month, day = value.split('-')
+								day = day.split(' ')[0]
+								hour, minute, second = value.split(' ')[1].split(':')
+								if int(hour) >= 12:
+									hour = str(int(hour) - 12)
+									second += ' PM'
+								elif int(hour) < 12:
+									second += ' AM'
+								month = months[int(month) - 1]
+								ct = month + " " + day + ", " + year + " at exactly " + hour + ":" + minute + ":" + second
+			# latest and frequent locations
+			with open('uploads/json/location_history.json', encoding="utf8") as loc_json:
+				loc_history = json.load(loc_json)
+				for key, value in loc_history.items():
+					if (key == 'Latest Location'):
+						city = value[0]['City'].capitalize()
+						region = value[0]['Region'].upper()
+						country = value[0]['Country'].upper()
+						recent_location = city + ", " + region + " in " + country
+					elif (key == 'Frequent Locations'):
+						freq_loc = []
+						for location in value:
+							city = location['City'].split(" ")
+							city_string = ""
+							for term in city:
+								city_string = city_string + term.capitalize() + " "
+
+							freq_loc.append(city_string)
+							freq_loc.append(location['Country'].upper())
+							freq_loc.append(location['Region'].upper())
+						freq_loc_string = ""
+						i = 1
+						for loc in freq_loc:
+							if (i % 3 == 2):
+								freq_loc_string = freq_loc_string + loc + ", "
+							if (i % 3 == 1):
+								freq_loc_string = freq_loc_string + loc + " in "
+							if (i % 3 == 0):
+								freq_loc_string = freq_loc_string + loc + " ; "
+							i+=1
+						
+			# 3 most recent received snaps
+			# do 3 people you snap the most next
+			iter = 0
+			recent_snap = []
+			with open('uploads/json/snap_history.json', encoding="utf8") as snap_json:
+				snap_history = json.load(snap_json)
+				top3_dict = {}
+				for key, value in snap_history.items():
+					# loop thru value
+					if (key == 'Received Snap History'):
+						for val in value:
+							if (iter < 3):
+								recent_snap.append(val['From'])
+								iter += 1
+							if (not val['From'] in top3_dict):
+								top3_dict[val['From']] = 1
+							else:
+								top3_dict[val['From']] += 1
+				recent_snap_string = ""
+				for snap in recent_snap:
+					recent_snap_string = recent_snap_string + snap + ", "
+				recent_snap_string = recent_snap_string[:-2]
+				sorted_dict = sorted(top3_dict.items(), key=lambda x:x[1], reverse=True)
+				converted_dict = dict(sorted_dict)
+				i = 0
+				top3_string = ""
+				for username, value in converted_dict.items():
+					if (i < 5):
+						top3_string = top3_string + username + "  " + str(value) + ", "
+						i += 1
+				top3_string = top3_string[:-2]
+
+			user = Users(username=db_username, filename=file.filename, creation_time=ct, recent_location=recent_location, frequent_locations=freq_loc_string, recent_snap=recent_snap_string, top3_snappers=top3_string, data=file.read())
+
 			with open('uploads/json/location_history.json', encoding="utf8") as json_file:
 				loc = json.load(json_file)
-			location = Location(username="new_user_26", filename="location_history.json", data=loc)
+			location = Location(username=db_username, filename="location_history.json", data=loc)
 
 			with open('uploads/json/friends.json', encoding="utf8") as json_file:
 				frien = json.load(json_file)
-			friends = Friends(username="new_user_26", filename='friends.json', data=frien)
+			friends = Friends(username=db_username, filename='friends.json', data=frien)
 
 			with open('uploads/json/chat_history.json', encoding="utf8") as json_file:
 				chat = json.load(json_file)
-			chat_history = ChatHistory(username="new_user_26", filename='chat_history.json', data=chat)
+			chat_history = ChatHistory(username=db_username, filename='chat_history.json', data=chat)
 
 			with open('uploads/json/account.json', encoding="utf8") as json_file:
 				acct = json.load(json_file)
-			account = Account(username="new_user_26", filename='account', data=acct)
+			account = Account(username=db_username, filename='account', data=acct)
 
 			db.session.add(user)
 			db.session.add(location)
@@ -99,12 +187,6 @@ def site():
 			db.session.add(chat_history)
 			db.session.add(account)
 			db.session.commit()
-
-			# conn = get_db_connection()
-			# cursor = conn.cursor()
-			# post = cursor.execute('SELECT username FROM Users WHERE username = "new_user_15"').fetchall()
-			# print(post[0]['username'])
-			# conn.close()
 
 			return redirect(url_for('query'))
 
@@ -114,10 +196,23 @@ def site():
 def query():
 	conn = get_db_connection()
 	cursor = conn.cursor()
-	post = cursor.execute('SELECT * FROM Users WHERE username = "new_user_26"').fetchall()
+	post = cursor.execute('SELECT * FROM Users WHERE username = "new_user_3"').fetchall()
+	recent_snaps = post[0]['recent_snap'].split(",")
+	recent_locs = post[0]['frequent_locations'].split(";")
+	top3_snaps = post[0]['top3_snappers'].split(",")
+	recent_snap = []
+	for snap in recent_snaps:
+		recent_snap.append(snap)
+	freq_locs = []
+	for loc in recent_locs:
+		freq_locs.append(loc)
+	top3_snappers = []
+	for snapper in top3_snaps:
+		top3_snappers.append(snapper)
+	
 	conn.close()
 
-	return render_template('query.html', post=post)
+	return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers)
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))

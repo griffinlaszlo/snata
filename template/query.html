@@ -1,14 +1,58 @@
 <html>
    <head>
       <title>Index Page</title>
+      <meta charset="UTF-8">
 	  <link rel="stylesheet" href="{{ url_for('static', filename='css/query.css') }}">
    </head>
    <body>
+        <div class="topnav">
+            <nav>
+                <a class="active" href="">Home</a>
+                <a href="#news">Location</a>
+                <a href="#contact">Friends</a>
+                <a href="#about">Chats</a>
+                <a href="#about">Account</a>
+            </nav>
+        </div>
     <!-- {% for posts in post %} -->
-        <div class='post'>
-            <h1>Hello {{ post[0]['username'] }}, Welcome to your personalized statistics!</h1>
-            <h2>Your ID is {{ post[0]['id'] }}</h2>
-            <h2>Thank you for your submitted file: {{ post[0]['filename'] }}</h2>
+        <div class="content">
+            <div class='post'>
+                <h1>😎 Hello {{ post[0]['username'] }}, Welcome to your dashboard! 😎</h1>
+                <h2>We received your 📁: {{ post[0]['filename'] }}!</h2>
+                <div class="image">
+                    <img src="{{ url_for('static', filename='css/snapchat_bounce.gif') }}" width=125 height=100 >
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <h2>Your 3 most recent snaps were received by </h2>
+                        {% for snap in recent_snaps %}
+                            <h2>{{ snap }}</h2>
+                        {% endfor %}
+                        <div class="image">
+                            <img src="{{ url_for('static', filename='css/rankings.png') }}" width=250 height=200 >
+                        </div>
+                        <h2>Your top 5 friends who have sent you the most snaps </h2>
+                        {% for snapper in top3_snappers %}
+                            <h2>{{ snapper }}</h2>
+                        {% endfor %}
+                    </div>
+                    <div class="column">
+                        <h2>Take a look back 👀 and see when you created your account</h2>
+                        <h2>{{ post[0]['creation_time'] }}</h2>
+                    </div>
+                    <div class="column">
+                        <h2>Here's your most recently recorded location 📍</h2>
+                        <h2>{{ post[0]['recent_location'] }}</h2>
+                        <div class="image">
+                            <img src="{{ url_for('static', filename='css/location.png') }}" width=250 height=200 >
+                        </div>
+                        <h2>Check out some of your frequent locations</h2>
+                        {% for loc in freq_locs %}
+                            <h2>{{ loc }}</h2>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
     <!-- {% endfor %} -->
    </body>
