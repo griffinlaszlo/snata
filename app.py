@@ -1,6 +1,11 @@
 import sqlite3
 from flask import Flask, request, url_for, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from flask_wtf import FlaskForm
+from flask_bcrypt import Bcrypt
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import InputRequired, Length, ValidationError
 from flask_migrate import Migrate, migrate
 from zipfile import ZipFile
 import os
@@ -11,6 +16,7 @@ app.debug = True
 
 # adding configuration for using a sqlite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SECRET_KEY'] = 'thisisasecretkey'
 
 app.config['ZIP_UPLOAD_EXTENSION'] = ['.zip']
 app.config['UPLOAD_PATH'] = 'uploads'
@@ -18,13 +24,25 @@ app.config['UPLOAD_PATH'] = 'uploads'
 # Creating an SQLAlchemy instance
 db = SQLAlchemy(app)
 
+# create instance for password encryption model
+bcrypt = Bcrypt(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
+
 # Settings for migrations
 migrate = Migrate(app, db)
 
 # Models go here
-class Users(db.Model):
+class Users(db.Model, UserMixin):
 	id = db.Column(db.Integer, unique=True, primary_key=True)
 	username = db.Column(db.String(20), unique=True, nullable=False)
+	password = db.Column(db.String(40), nullable=False)
 	filename = db.Column(db.String(50))
 	creation_time = db.Column(db.String(50))
 	recent_location = db.Column(db.String(50))
@@ -35,6 +53,27 @@ class Users(db.Model):
 
 	def __repr__(self):
 		return f'ID : {self.id}, Name : {self.username}'
+
+class SignupForm(FlaskForm):
+	username = StringField(validators=[InputRequired(), Length(
+	min=4, max=20)], render_kw={"placeholder": "Username"})
+	password = PasswordField(validators=[InputRequired(), Length(
+	min=4, max=20)], render_kw={"placeholder": "Password"})
+	submit = SubmitField("Sign Up")
+
+	def validate_username(self, username):
+		existing_user_username = Users.query.filter_by(
+			username=username.data).first()
+		if existing_user_username:
+			raise ValidationError(
+				"That username already exists. Please choose another.")
+
+class LoginForm(FlaskForm):
+	username = StringField(validators=[InputRequired(), Length(
+	min=4, max=20)], render_kw={"placeholder": "Username"})
+	password = PasswordField(validators=[InputRequired(), Length(
+	min=4, max=20)], render_kw={"placeholder": "Password"})
+	submit = SubmitField("Login")
 
 class Location(db.Model):
 	id = db.Column(db.Integer, unique=True, primary_key=True)
@@ -222,6 +261,7 @@ def get_db_connection():
 	return conn
 
 @app.route('/homePage', methods=['GET', 'POST'])
+@login_required
 def homePage():
 	# conn = get_db_connection()
 	# post = conn.execute('SELECT * FROM Users').fetchall()
@@ -247,6 +287,36 @@ def instructions():
 
     # show the form, it wasn't submitted
 	return render_template('instructions.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+	form = LoginForm()
+	if form.validate_on_submit():
+		user = Users.query.filter_by(username=form.username.data).first()
+		if user:
+			if bcrypt.check_password_hash(user.password, form.password.data):
+				login_user(user)
+				return redirect(url_for('homePage'))
+	return render_template('login.html', form=form)
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+	form = SignupForm()
+
+	if form.validate_on_submit():
+		hashed_password = bcrypt.generate_password_hash(form.password.data)
+		new_user = Users(username=form.username.data, password=hashed_password)
+		db.session.add(new_user)
+		db.session.commit()
+		return redirect(url_for('login'))
+
+	return render_template('signup.html', form=form)
+
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+	logout_user()
+	return redirect(url_for('login'))
 
 # FUNCTION TO GET THE ZIP FILE
 # @app.route("/",methods=["GET"])
