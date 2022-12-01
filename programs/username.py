@@ -12,7 +12,8 @@ import datetime
 def main():
     
     print_username()
-    first_firend()
+    first_friend()
+    first_memory()
 
     
 
@@ -25,20 +26,14 @@ def print_username():
     # file = json.load(FILE)
     print(file["Basic Information"]["Username"])
 
-def first_memory:
+def first_memory():
 
     FILE = open('../mydata_1669823359244/json/memories_history.json')
     file = json.load(FILE)
-
-    print(file[][])
-
+    print(f"Your first memory was taken at {file['Saved Media'][-1]['Date']}, it was a {file['Saved Media'][-1]['Media Type']}")
 
 
-# def saved_sna(file):
-#     first
-#      print(file[][])
-    
-def first_firend():
+def first_friend():
 
     FILE = open('../mydata_1669823359244/json/friends.json')
     file = json.load(FILE)
