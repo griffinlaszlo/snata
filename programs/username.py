@@ -18,7 +18,7 @@ def main():
 
 def print_username():
 
-    FILE = open('json/account.json')
+    FILE = open('uploads/account.json')
     file = json.load(FILE)
     print(file["Basic Information"]["Username"])
 

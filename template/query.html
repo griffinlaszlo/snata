@@ -1,59 +1,79 @@
-<html>
-   <head>
-      <title>Index Page</title>
-      <meta charset="UTF-8">
-	  <link rel="stylesheet" href="{{ url_for('static', filename='css/query.css') }}">
-   </head>
-   <body>
-        <div class="topnav">
-            <nav>
-                <a class="active" href="">Home</a>
-                <a href="#news">Location</a>
-                <a href="#contact">Friends</a>
-                <a href="#about">Chats</a>
-                <a href="#about">Account</a>
-            </nav>
-        </div>
-    <!-- {% for posts in post %} -->
-        <div class="content">
-            <div class='post'>
-                <h1>😎 Hello {{ post[0]['username'] }}, Welcome to your dashboard! 😎</h1>
-                <h2>We received your 📁: {{ post[0]['filename'] }}!</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNATA</title>
+    <link rel="stylesheet" href="static/css/site2.css" type="text/css">
+</head>
+<body>
+    <div class="container">
+        <div class='post'>
+            <section>
+                <h1>
+                    <h1>😎 Hello {{ post[0]['username'] }}, Welcome to your dashboard! 😎</h1>
+                </h1>
+            </section>
+
+            <section>
+                <h1>
+                    Here are some insights into your Snapchat data:
+                </h1>
+            </section>  
+
+
+            <section>
+                <h1>Take a look back 👀 to when you created your account</h1>
+                <h2>{{ post[0]['creation_time'] }}</h2>
+            </section>
+
+
+            <section>
+                <h1>Looks to us like you were most recently in...</h1>
+                <h2>{{ post[0]['recent_location'] }}📍</h2>
+            </section>
+
+            <section>
                 <div class="image">
-                    <img src="{{ url_for('static', filename='css/snapchat_bounce.gif') }}" width=125 height=100 >
+                    <img src="{{ url_for('static', filename='css/location.png') }}" width=250 height=200 >
                 </div>
-                <div class="row">
-                    <div class="column">
-                        <h2>Your 3 most recent snaps were received by </h2>
-                        {% for snap in recent_snaps %}
-                            <h2>{{ snap }}</h2>
-                        {% endfor %}
-                        <div class="image">
-                            <img src="{{ url_for('static', filename='css/rankings.png') }}" width=250 height=200 >
-                        </div>
-                        <h2>Your top 5 friends who have sent you the most snaps </h2>
-                        {% for snapper in top3_snappers %}
-                            <h2>{{ snapper }}</h2>
-                        {% endfor %}
-                    </div>
-                    <div class="column">
-                        <h2>Take a look back 👀 and see when you created your account</h2>
-                        <h2>{{ post[0]['creation_time'] }}</h2>
-                    </div>
-                    <div class="column">
-                        <h2>Here's your most recently recorded location 📍</h2>
-                        <h2>{{ post[0]['recent_location'] }}</h2>
-                        <div class="image">
-                            <img src="{{ url_for('static', filename='css/location.png') }}" width=250 height=200 >
-                        </div>
-                        <h2>Check out some of your frequent locations</h2>
-                        {% for loc in freq_locs %}
-                            <h2>{{ loc }}</h2>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+                <h2>You can frequently be found in...</h2>
+                {% for loc in freq_locs %}
+                    <h2>{{ loc }}</h2>
+                {% endfor %}
+            </section>
+
+            <section>
+                    <h1>Here are some of your top 10 sayings...</h1>
+                    {% for saying in top10_text %}
+                        <h2>{{ saying }}</h2>
+                    {% endfor %}
+            </section>
+
+
+            <section>
+                    <h1> This is how you like to communicate most on Snap...</h1> 
+                    {% for media in media_types %}
+                        <h2>{{ media }}</h2>
+                    {% endfor %}
+            </section>
+
+
+            <section>
+                <h1> Here is who snaps you the most...</h1> 
+                {% for received in most_received %}
+                    <h2>{{ received }}</h2>
+                {% endfor %}
+            </section>
+
+
+            <section>
+                <h1>Take a look back 👀 to when you created your account</h1>
+                <h2>{{ post[0]['creation_time'] }}</h2>
+            </section>
+
         </div>
-    <!-- {% endfor %} -->
-   </body>
+    </div>
+</body>
 </html>
