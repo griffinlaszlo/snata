@@ -8,7 +8,7 @@ from tkinter import W
 
 # Constants
 
-FILE = open('uploads/json/user_profile.json')
+FILE = open('user_profile.json')
 file = json.load(FILE)
 months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 for key, value in file.items():
