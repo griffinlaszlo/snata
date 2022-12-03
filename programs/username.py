@@ -30,7 +30,7 @@ def first_memory():
     FILE = open('../mydata_1669823359244/json/memories_history.json')
     file = json.load(FILE)
 
-    print(file[][])
+    #print(file[][])
 
 
 
@@ -63,6 +63,6 @@ def first_firend():
     
     print(the_min_username)
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
 
