@@ -31,6 +31,11 @@ class Users(db.Model):
 	frequent_locations = db.Column(db.Text())
 	recent_snap = db.Column(db.String(50))
 	top3_snappers = db.Column(db.String(100))
+	most_received = db.Column(db.Text())
+	# most_sent = db.Column(db.Text())
+	media_types = db.Column(db.Text())
+	top10_text = db.Column(db.Text())
+	
 	data = db.Column(db.LargeBinary)
 
 	def __repr__(self):
@@ -80,8 +85,9 @@ def site():
 		if file.filename != "":
 			with ZipFile(file, 'r') as zip:
 				zip.extractall('uploads')
+			# create a new username in the database
+			db_username = "Grifff"
 
-			db_username = "new_user_3"
 			# from the user_profile.json grab creation time
 			months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 			with open('uploads/json/user_profile.json', encoding="utf8") as user_json:
@@ -163,7 +169,51 @@ def site():
 						i += 1
 				top3_string = top3_string[:-2]
 
-			user = Users(username=db_username, filename=file.filename, creation_time=ct, recent_location=recent_location, frequent_locations=freq_loc_string, recent_snap=recent_snap_string, top3_snappers=top3_string, data=file.read())
+			most_received = ""
+			# most_sent = ""
+			media_types = ""
+			top10_text = ""
+			with open('uploads/json/chat_history.json', encoding="utf8") as chat_json:
+				chat_history = json.load(chat_json)
+				for key, value in chat_history.items():
+					if key == 'Received Saved Chat History':
+						received = {}
+						media = {}
+						text = {}
+						for n in value:
+							for k, v in n.items():
+								if k == 'From':
+									# append v to received dict with count
+									received[v] = received.get(v, 0) + 1
+								elif k == 'Media Type':
+									media[v] = media.get(v, 0) + 1
+								elif k == 'Text':
+									text[v] = text.get(v, 0) + 1
+						# print()
+						# print('Top 5 Received Saved Chat History:')
+						# print()
+
+						for k, v in sorted(received.items(), key=lambda x: x[1], reverse=True)[:10]:
+							most_received = most_received + k + ": " + str(v) + ", "
+
+						# rank media types by count
+
+						# print('Media Types:')
+
+						for k, v in sorted(media.items(), key=lambda x: x[1], reverse=True):
+							media_types = media_types + k + ": " + str(v) + ", "
+
+						# print('Top 10 Text Sayings:')
+
+						count=0
+						for k, v in sorted(text.items(), key=lambda x: x[1], reverse=True):
+							if k != '':
+								count += 1
+								top10_text = top10_text + k + ": " + str(v) + ", "
+							if count == 10:
+								break
+			
+			user = Users(username=db_username, filename=file.filename, creation_time=ct, recent_location=recent_location, frequent_locations=freq_loc_string, recent_snap=recent_snap_string, top3_snappers=top3_string, most_received=most_received, media_types=media_types, top10_text=top10_text, data=file.read())
 
 			with open('uploads/json/location_history.json', encoding="utf8") as json_file:
 				loc = json.load(json_file)
@@ -196,10 +246,15 @@ def site():
 def query():
 	conn = get_db_connection()
 	cursor = conn.cursor()
-	post = cursor.execute('SELECT * FROM Users WHERE username = "new_user_3"').fetchall()
+	post = cursor.execute('SELECT * FROM Users WHERE username = "Grifff"').fetchall()
 	recent_snaps = post[0]['recent_snap'].split(",")
 	recent_locs = post[0]['frequent_locations'].split(";")
 	top3_snaps = post[0]['top3_snappers'].split(",")
+	most_received = post[0]['most_received'].split(",")
+	media_types = post[0]['media_types'].split(",")
+	top10_text = post[0]['top10_text'].split(",")
+
+
 	recent_snap = []
 	for snap in recent_snaps:
 		recent_snap.append(snap)
@@ -209,10 +264,19 @@ def query():
 	top3_snappers = []
 	for snapper in top3_snaps:
 		top3_snappers.append(snapper)
-	
+	most_received_list = []
+	for received in most_received:
+		most_received_list.append(received)
+	media_types_list = []
+	for media in media_types:
+		media_types_list.append(media)
+	top10_text_list = []
+	for text in top10_text:
+		top10_text_list.append(text)
+
 	conn.close()
 
-	return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers)
+	return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list)
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))

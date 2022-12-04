@@ -1,0 +1,82 @@
+<html>
+   <head>
+      <title>Index Page</title>
+      <meta charset="UTF-8">
+	  <link rel="stylesheet" href="{{ url_for('static', filename='css/query.css') }}">
+   </head>
+   <body>
+    <!-- {% for posts in post %} -->
+        <div class="content">
+            <div class='post'>
+                <h1>😎 Hello {{ post[0]['username'] }}, Welcome to your dashboard! 😎</h1>
+                <h2>We received your data! 📁</h2>
+                <br />
+                <br />
+                <br />
+                <div>
+                    <div>
+                        <h2>Your 3 most recent snaps were received by... </h2>
+                        {% for snap in recent_snaps %}
+                            <h3>{{ snap }}</h3>
+                        {% endfor %}
+                        <br />
+                        <br />
+                        <br />
+                        <div class="image">
+                            <img src="{{ url_for('static', filename='css/rankings.png') }}" width=250 height=200 >
+                        </div>
+                        <h2>Your top 5 friends who have sent you the most snaps... </h2>
+                        {% for snapper in top3_snappers %}
+                            <h2>{{ snapper }}</h2>
+                        {% endfor %}
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <div">
+                        <h2>Take a look back 👀 to when you created your account</h2>
+                        <h2>{{ post[0]['creation_time'] }}</h2>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <div">
+                        <h2>Here's your most recently recorded location 📍</h2>
+                        <h2>{{ post[0]['recent_location'] }}</h2>
+                        <div class="image">
+                            <img src="{{ url_for('static', filename='css/location.png') }}" width=250 height=200 >
+                        </div>
+                        <h2>You can frequently be found in...</h2>
+                        {% for loc in freq_locs %}
+                            <h2>{{ loc }}</h2>
+                        {% endfor %}
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <div>
+                        <h2> Here is who snaps you the most...</h2> 
+                        {% for received in most_received %}
+                            <h2>{{ received }}</h2>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <h2> This is how you like to communicate most on Snap...</h2> 
+                        {% for media in media_types %}
+                            <h2>{{ media }}</h2>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <h2> Here are some of your top 10 sayings...</h2> 
+                        {% for saying in top10_text %}
+                            <h2>{{ saying }}</h2>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- {% endfor %} -->
+   </body>
+</html>

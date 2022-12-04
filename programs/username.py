@@ -24,7 +24,7 @@ def main():
 
 def print_username():
 
-    FILE = open('../mydata_1669823359244/json/account.json')
+    FILE = open('uploads/account.json')
     file = json.load(FILE)
 
     # FILE = open('json/account.json')
@@ -138,6 +138,8 @@ def first_memory():
     print(f"Your first memory was taken at {file['Saved Media'][-1]['Date']}, it was a {file['Saved Media'][-1]['Media Type']}")
     link_to_memory = file["Saved Media"][-1]["Download Link"]
 
+    #print(file[][])
+
 
 def first_friend():
 
@@ -164,6 +166,6 @@ def first_friend():
     
     print(the_min_username)
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
 
