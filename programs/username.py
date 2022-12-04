@@ -14,6 +14,11 @@ def main():
     print_username()
     first_friend()
     first_memory()
+    total_snaps()
+    user_profile_info()
+    display_name_changes()
+    num_of_subscriptions()
+
 
     
 
@@ -33,9 +38,8 @@ def total_snaps():
     snaps_received_saved = len(file["Received Saved Chat History"])
     snaps_received_unsaved = len(file["Received Unsaved Chat History"])
     total_snaps_received = snaps_received_unsaved + snaps_received_saved
-
-    snaps_sent_saved = len(file["Sent Saved Chat History])
-    snaps_sent_unsaved = len(file["Sent Unsaved Chat History])
+    snaps_sent_saved = len(file["Sent Saved Chat History"])
+    snaps_sent_unsaved = len(file["Sent Unsaved Chat History"])
     total_snaps_sent = snaps_received_unsaved + snaps_received_saved
 
     text_snaps = 0
@@ -51,7 +55,7 @@ def total_snaps():
             note_snaps += 1
         elif i["Media Type"] == "NOTE":
             note_snaps += 1
-         elif i["Media Type"] == "SHARE":
+        elif i["Media Type"] == "SHARE":
             share_snaps += 1
 
 
@@ -62,7 +66,7 @@ def total_snaps():
             note_snaps += 1
         elif i["Media Type"] == "NOTE":
             note_snaps += 1
-         elif i["Media Type"] == "SHARE":
+        elif i["Media Type"] == "SHARE":
             share_snaps += 1
 
     for i in file["Sent Unsaved Chat History"]:
@@ -72,7 +76,7 @@ def total_snaps():
             note_snaps += 1
         elif i["Media Type"] == "NOTE":
             note_snaps += 1
-         elif i["Media Type"] == "SHARE":
+        elif i["Media Type"] == "SHARE":
             share_snaps += 1
 
     for i in file["Sent Saved Chat History"]:
@@ -82,11 +86,47 @@ def total_snaps():
             note_snaps += 1
         elif i["Media Type"] == "NOTE":
             note_snaps += 1
-         elif i["Media Type"] == "SHARE":
+        elif i["Media Type"] == "SHARE":
             share_snaps += 1
     
 
+def display_name_changes():
 
+    FILE = open('../mydata_1669823359244/json/account_history.json')
+    file = json.load(FILE)
+    the_list = []
+    for i in file["Display Name Change"]:
+        the_list.append([i["Date"], i["Display Name"]])
+
+    return the_list
+
+
+def num_of_subscriptions():
+
+    FILE = open('../mydata_1669823359244/json/subscriptions.json')
+    file = json.load(FILE)
+
+    public_users = len(file["Public Users"])
+    publishers = len(file["Public Users"])
+    stories = len(file["Stories"])
+    total_subs = stories + public_users + publishers
+
+    return total_subs
+
+def user_profile_info():
+
+    FILE = open('../mydata_1669823359244/json/user_profile.json')
+    file = json.load(FILE)
+    
+    breakdown = []
+    for i in file["Breakdown of Time Spent on App"]:
+        breakdown.append(i)
+    
+    app_interactions = len(file["Interactions"]["App Interactions"])
+    web_interactions = len(file["Interactions"]["Web Interactions"])
+
+
+    return breakdown
 
 
 def first_memory():
