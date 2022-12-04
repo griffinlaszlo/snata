@@ -26,6 +26,69 @@ def print_username():
     # file = json.load(FILE)
     print(file["Basic Information"]["Username"])
 
+
+def total_snaps():
+    FILE = open('../mydata_1669823359244/json/chat_history.json')
+    file = json.load(FILE)
+    snaps_received_saved = len(file["Received Saved Chat History"])
+    snaps_received_unsaved = len(file["Received Unsaved Chat History"])
+    total_snaps_received = snaps_received_unsaved + snaps_received_saved
+
+    snaps_sent_saved = len(file["Sent Saved Chat History])
+    snaps_sent_unsaved = len(file["Sent Unsaved Chat History])
+    total_snaps_sent = snaps_received_unsaved + snaps_received_saved
+
+    text_snaps = 0
+    media_snaps = 0
+    share_snaps = 0
+    note_snaps = 0
+
+
+    for i in file["Received Saved Chat History"]:
+        if i["Media Type"] == "TEXT":
+            text_snaps += 1
+        elif i["Media Type"] == "MEDIA":
+            note_snaps += 1
+        elif i["Media Type"] == "NOTE":
+            note_snaps += 1
+         elif i["Media Type"] == "SHARE":
+            share_snaps += 1
+
+
+    for i in file["Received Unsaved Chat History"]:
+        if i["Media Type"] == "TEXT":
+            text_snaps += 1
+        elif i["Media Type"] == "MEDIA":
+            note_snaps += 1
+        elif i["Media Type"] == "NOTE":
+            note_snaps += 1
+         elif i["Media Type"] == "SHARE":
+            share_snaps += 1
+
+    for i in file["Sent Unsaved Chat History"]:
+        if i["Media Type"] == "TEXT":
+            text_snaps += 1
+        elif i["Media Type"] == "MEDIA":
+            note_snaps += 1
+        elif i["Media Type"] == "NOTE":
+            note_snaps += 1
+         elif i["Media Type"] == "SHARE":
+            share_snaps += 1
+
+    for i in file["Sent Saved Chat History"]:
+        if i["Media Type"] == "TEXT":
+            text_snaps += 1
+        elif i["Media Type"] == "MEDIA":
+            note_snaps += 1
+        elif i["Media Type"] == "NOTE":
+            note_snaps += 1
+         elif i["Media Type"] == "SHARE":
+            share_snaps += 1
+    
+
+
+
+
 def first_memory():
 
     FILE = open('../mydata_1669823359244/json/memories_history.json')
