@@ -17,37 +17,27 @@
        </div>
       
        <div class="form-contatiner">
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                
+                
+                
+            
            <ul class="list centered">
                <li>Login</li>
-               <li><input type="text" name="User Name" placeholder="snap.user"></li>
-               <li><input type="text" name="Password" placeholder="........."></li>
+               <li>{{ form.username }}</li>
+               <li>{{ form.password }}</li>
                <li>
-                   <button class="button-27" type="submit" role="button">LOG IN</button>
+                {{ form.submit }}
                </li>
                <li>
                 <a href="{{url_for('signup')}}">Sign Up</a>
                </li>
               
            </ul>
+        </form>
        </div>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <form method="POST" action="">
-            {{ form.hidden_tag() }}
-            {{ form.username }}
-            {{ form.password }}
-            {{ form.submit }}
-       </form>
+       
       
       
       

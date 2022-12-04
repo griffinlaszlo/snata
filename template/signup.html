@@ -17,41 +17,30 @@
        </div>
       
        <div class="form-contatiner">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            
+            
+            
+            
            <ul class="list centered">
-               <li> Create Username<br>
-                <input type="text" id="username" name="User Name" placeholder="snap.user"></li>
-                <br><div id="user-result"></div>
-               <li> Create Password
-                <input type="text" id="password" name="Password" placeholder="........."></li>
-               <li> Confirm Password
-                <input type="text" id="confirm" name="Confirm Password" placeholder="........."></li>
+               <li>Create Username</li>
+               <li>{{ form.username }}</li>
+               <li>Create Password</li>
                <li>
-                   <button class="button-27" type="submit" role="button">SIGN UP</button>
+                {{ form.password }}
+               </li>
+               <li>
+                {{ form.submit }}
                </li>
                <li>
                 <a href="{{url_for('login')}}">Login</a>
                </li>
               
            </ul>
-       </div>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        {{ form.username }}
-        {{ form.password }}
-        {{ form.submit }}
         </form>
+       </div>
+       
       
       
       
