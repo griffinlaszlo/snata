@@ -121,10 +121,12 @@ def user_profile_info():
     breakdown = []
     for i in file["Breakdown of Time Spent on App"]:
         breakdown.append(i)
-    
-    app_interactions = len(file["Interactions"]["App Interactions"])
-    web_interactions = len(file["Interactions"]["Web Interactions"])
 
+    engagement_list = []
+    for i in file["Engagement"]:
+        engagement_list.append([i["Event"], i["Occurences"]])
+
+    num_of_interest_categories = len(file["Interest Categories"])
 
     return breakdown
 
@@ -134,6 +136,7 @@ def first_memory():
     FILE = open('../mydata_1669823359244/json/memories_history.json')
     file = json.load(FILE)
     print(f"Your first memory was taken at {file['Saved Media'][-1]['Date']}, it was a {file['Saved Media'][-1]['Media Type']}")
+    link_to_memory = file["Saved Media"][-1]["Download Link"]
 
 
 def first_friend():
