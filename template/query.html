@@ -12,29 +12,62 @@
         <div class='post'>
             <section>
                 <h1>
-                    <h1>😎 Hello {{ post[0]['username'] }}, Welcome to your dashboard! 😎</h1>
+                    <h1>😎 Hello {{ post[0]['snap_username'] }}, Let's take a peek at your data! 😎</h1>
                 </h1>
-            </section>
 
-            <section>
+                <div class="row">
+                    <div class="column">
+                        <h1>
+                            Take a 👀 🔙 to when you created your account
+                        </h1>
+                        <h2>{{ post[0]['creation_time'] }}</h2>
+                        <h1>
+                            Your email 📧
+                        </h1>
+                        <h2>{{ post[0]['snap_email'] }}</h2>
+                        <h1>
+                            Your mobile 📱 number 
+                        </h1>
+                        <h2>{{ post[0]['snap_phone'] }}</h2>
+                    </div>
+                    <div class="column">
+
+                    </div>
+                    <div class="column">
+                        <h1>
+                            Do you remember when you added {{ first_friend[7] }} (@{{ first_friend[6] }})?
+                        </h1>
+                        <h1>They were your first added friend! Here's the rest of your first 5 friends added: </h1>
+                        {% for friend in first5_friends %}
+                            <h2>{{ friend[7] }} ({{ friend[6] }})</h2>
+                        {% endfor %}
+                    </div>
+                </div>
                 <h1>
-                    Here are some insights into your Snapchat data:
+                    👾 Keep scrolling to see more insights into your Snapchat data 👾
                 </h1>
-            </section>  
-
+            </section> 
 
             <section>
-                <h1>Take a look back 👀 to when you created your account</h1>
-                <h2>{{ post[0]['creation_time'] }}</h2>
+                <div class="row">
+                    <div class="column2">
+                        {{ post[0]['story_string'] }}
+                    </div>
+                    <div class="column2">
+                        <h1>Here are your favorite creators from the Discovery Page!</h1>
+                        <h1>You've viewed...</h1>
+                        {% for story in story_array %}
+                            <h2>
+                                {{ story }}
+                            </h2>
+                        {% endfor %}
+                    </div>
+                </div>
             </section>
-
 
             <section>
                 <h1>Looks to us like you were most recently in...</h1>
                 <h2>{{ post[0]['recent_location'] }}📍</h2>
-            </section>
-
-            <section>
                 <div class="image">
                     <img src="{{ url_for('static', filename='css/location.png') }}" width=250 height=200 >
                 </div>
@@ -65,12 +98,6 @@
                 {% for received in most_received %}
                     <h2>{{ received }}</h2>
                 {% endfor %}
-            </section>
-
-
-            <section>
-                <h1>Take a look back 👀 to when you created your account</h1>
-                <h2>{{ post[0]['creation_time'] }}</h2>
             </section>
 
         </div>

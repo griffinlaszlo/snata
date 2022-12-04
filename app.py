@@ -25,6 +25,9 @@ migrate = Migrate(app, db)
 class Users(db.Model):
 	id = db.Column(db.Integer, unique=True, primary_key=True)
 	username = db.Column(db.String(20), unique=True, nullable=False)
+	snap_username = db.Column(db.String(30))
+	snap_email = db.Column(db.String(50))
+	snap_phone = db.Column(db.String(15))
 	filename = db.Column(db.String(50))
 	creation_time = db.Column(db.String(50))
 	recent_location = db.Column(db.String(50))
@@ -35,48 +38,25 @@ class Users(db.Model):
 	# most_sent = db.Column(db.Text())
 	media_types = db.Column(db.Text())
 	top10_text = db.Column(db.Text())
+	story_string = db.Column(db.Text())
+	top5story_string = db.Column(db.Text())
 	
-	data = db.Column(db.LargeBinary)
+	#data = db.Column(db.LargeBinary) -- data=file.read()
 
 	def __repr__(self):
 		return f'ID : {self.id}, Name : {self.username}'
 
-class Location(db.Model):
-	id = db.Column(db.Integer, unique=True, primary_key=True)
-	username = db.Column(db.String(20), unique=True, nullable=False)
-	filename = db.Column(db.String(50))
-	data = db.Column(db.PickleType)
+# class Location(db.Model):
+# 	id = db.Column(db.Integer, unique=True, primary_key=True)
+# 	username = db.Column(db.String(20), unique=True, nullable=False)
+# 	filename = db.Column(db.String(50))
+# 	data = db.Column(db.PickleType)
 
-	def __repr__(self):
-		return f'ID : {self.id}, Name : {self.username}'
+# 	def __repr__(self):
+# 		return f'ID : {self.id}, Name : {self.username}'
 
-class Friends(db.Model):
-	id = db.Column(db.Integer, unique=True, primary_key=True)
-	username = db.Column(db.String(20), unique=True, nullable=False)
-	filename = db.Column(db.String(50))
-	data = db.Column(db.PickleType)
 
-	def __repr__(self):
-		return f'ID : {self.id}, Name : {self.username}'
-
-class ChatHistory(db.Model):
-	id = db.Column(db.Integer, unique=True, primary_key=True)
-	username = db.Column(db.String(20), unique=True, nullable=False)
-	filename = db.Column(db.String(50))
-	data = db.Column(db.PickleType)
-
-	def __repr__(self):
-		return f'ID : {self.id}, Name : {self.username}'
-
-class Account(db.Model):
-	id = db.Column(db.Integer, unique=True, primary_key=True)
-	username = db.Column(db.String(20), unique=True, nullable=False)
-	filename = db.Column(db.String(50))
-	data = db.Column(db.PickleType)
-
-	def __repr__(self):
-		return f'ID : {self.id}, Name : {self.username}'
-
+# SITE FUNCTIONS app route matches the url bar
 @app.route('/', methods=['GET', 'POST'])
 def site():
 	if request.method == 'POST':
@@ -86,7 +66,7 @@ def site():
 			with ZipFile(file, 'r') as zip:
 				zip.extractall('uploads')
 			# create a new username in the database
-			db_username = "Grifff"
+			db_username = "user9"
 
 			# from the user_profile.json grab creation time
 			months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -212,30 +192,50 @@ def site():
 								top10_text = top10_text + k + ": " + str(v) + ", "
 							if count == 10:
 								break
-			
-			user = Users(username=db_username, filename=file.filename, creation_time=ct, recent_location=recent_location, frequent_locations=freq_loc_string, recent_snap=recent_snap_string, top3_snappers=top3_string, most_received=most_received, media_types=media_types, top10_text=top10_text, data=file.read())
-
-			with open('uploads/json/location_history.json', encoding="utf8") as json_file:
-				loc = json.load(json_file)
-			location = Location(username=db_username, filename="location_history.json", data=loc)
-
-			with open('uploads/json/friends.json', encoding="utf8") as json_file:
-				frien = json.load(json_file)
-			friends = Friends(username=db_username, filename='friends.json', data=frien)
-
-			with open('uploads/json/chat_history.json', encoding="utf8") as json_file:
-				chat = json.load(json_file)
-			chat_history = ChatHistory(username=db_username, filename='chat_history.json', data=chat)
-
 			with open('uploads/json/account.json', encoding="utf8") as json_file:
 				acct = json.load(json_file)
-			account = Account(username=db_username, filename='account', data=acct)
+				snap_username = acct["Basic Information"]["Username"]
+
+			with open('uploads/json/account_history.json', encoding="utf8") as json_file:
+				acct_hist = json.load(json_file)
+				snap_email = acct_hist["Email Change"][0]["Email Address"]
+				snap_phone = acct_hist["Mobile Number Change"][0]["Mobile Number"]
+
+			with open('uploads/json/story_history.json', encoding="utf8") as json_file:
+				story_hist = json.load(json_file)
+
+				total_story_views = 0
+				total_story_replies = 0
+				story_count = 0
+				for x in story_hist["Your Story Views"]:
+					story_views = x["Story Views"]
+					story_replies = x["Story Replies"]
+					total_story_views = total_story_views + story_views
+					total_story_replies = total_story_replies + story_replies
+					story_count += 1
+
+				if story_count <= 100:
+					story_string = f"You like to keep things lowkey...\nYou've only posted to your story {story_count} times\nStill racking up the views though!\nYou have {total_story_views} views across all your stories"
+
+				elif story_count >= 100 and story_count <= 300:
+					story_string = f"You could write a book with all these stories...\nYou've posted to your story {story_count} times\nLotta eyes on them too!\nYou have {total_story_views} views across all your stories"
+
+				elif story_count >= 300 and story_count <= 500:
+					story_string = f"You're a story teller!\nYou've posted to your story {story_count} times\nLotta eyes on them too!\nYou have {total_story_views} views across all your stories"
+
+				elif story_count > 500:
+					story_string = f"You're an open book!\nYou've posted to your story {story_count} times\nwith {total_story_views} total views across all your stories"
+					
+			user = Users(username=db_username, snap_username=snap_username, snap_email=snap_email, snap_phone=snap_phone, filename=file.filename, creation_time=ct, 
+				recent_location=recent_location, frequent_locations=freq_loc_string, recent_snap=recent_snap_string, top3_snappers=top3_string, most_received=most_received, 
+				media_types=media_types, top10_text=top10_text, story_string=story_string)
+
+			# with open('uploads/json/location_history.json', encoding="utf8") as json_file:
+			# 	loc = json.load(json_file)
+			# location = Location(username=db_username, filename="location_history.json", data=loc)
 
 			db.session.add(user)
-			db.session.add(location)
-			db.session.add(friends)
-			db.session.add(chat_history)
-			db.session.add(account)
+			#db.session.add(location)
 			db.session.commit()
 
 			return redirect(url_for('query'))
@@ -246,7 +246,7 @@ def site():
 def query():
 	conn = get_db_connection()
 	cursor = conn.cursor()
-	post = cursor.execute('SELECT * FROM Users WHERE username = "Grifff"').fetchall()
+	post = cursor.execute('SELECT * FROM Users WHERE username = "user9"').fetchall()
 	recent_snaps = post[0]['recent_snap'].split(",")
 	recent_locs = post[0]['frequent_locations'].split(";")
 	top3_snaps = post[0]['top3_snappers'].split(",")
@@ -276,7 +276,36 @@ def query():
 
 	conn.close()
 
-	return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list)
+	with open('uploads/json/friends.json', encoding="utf8") as json_file:
+		friends = json.load(json_file)
+		min_array = []
+		for i in friends["Friends"]:
+			current = [int(i["Creation Timestamp"][0:4]), int(i["Creation Timestamp"][5:7]), int(i["Creation Timestamp"][8:10]), int(i["Creation Timestamp"][11:13]),  int(i["Creation Timestamp"][14:16]), int(i["Creation Timestamp"][17:19]), i["Username"], i["Display Name"]]
+			min_array.append(current)
+
+		min_array = sorted(min_array)
+		first_friend = min_array[2]
+		min_array = min_array[3:7] # first two are you and teamsnap get other first 5 friends added
+
+	with open('uploads/json/story_history.json', encoding="utf8") as json_file:
+		story_hist = json.load(json_file)
+
+		viewer = {}
+		count = 0
+		for x in story_hist["Friend and Public Story Views"]:
+			for key, value in x.items():
+				if key == 'View':
+					viewer[value] = viewer.get(value, 0) + 1
+
+		story_array = []
+		for k, v in sorted(viewer.items(), key=lambda x: x[1], reverse=True):
+			if k != '' and k != 'no name':
+				count += 1
+				story_array.append(f"@{k}'s story {v} times")
+			if count == 5:
+				break
+			
+	return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend= first_friend, first5_friends=min_array, story_array=story_array)
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -284,21 +313,6 @@ def get_db_connection():
 	conn = sqlite3.connect(db_path)
 	conn.row_factory = sqlite3.Row
 	return conn
-
-@app.route('/homePage', methods=['GET', 'POST'])
-def homePage():
-	# conn = get_db_connection()
-	# post = conn.execute('SELECT * FROM Users').fetchall()
-	# conn.close()
-	#if request.method == 'POST':
-        # do stuff when the form is submitted
-
-        # redirect to end the POST handling
-        # the redirect can be to the same route or somewhere else
-		#return redirect(url_for('site'))
-
-    # show the form, it wasn't submitted
-	return render_template('homePage.html')
 
 @app.route('/instructions', methods=['GET', 'POST'])
 def instructions():
@@ -312,36 +326,6 @@ def instructions():
     # show the form, it wasn't submitted
 	return render_template('instructions.html')
 
-# FUNCTION TO GET THE ZIP FILE
-# @app.route("/",methods=["GET"])
-# def page_name_get(): 
-#     return """<form action="." method="post" enctype=multipart/form-data>
-#         <input type="file" accept="application/zip" name="data_zip_file" accept="application/zip" required>
-#          <button type="submit">Send zip file!</button>
-#         </form>"""
-
-# @app.route("/",methods=["POST"])
-# def page_name_post():
-#     file = request.files['data_zip_file'] 
-#     file_like_object = file.stream._file  
-#     zipfile_ob = zipfile.ZipFile(file_like_object)
-#     file_names = zipfile_ob.namelist()
-#     # Filter names to only include the filetype that you want:
-#     file_names = [file_name for file_name in file_names if file_name.endswith(".txt")]
-#     files = [(zipfile_ob.open(name).read(),name) for name in file_names]
-#     return str(files)
-
-@app.route('/add', methods=['POST'])
-def upload_file():
-	uploaded_file = request.form.get("data_zip_file")
-	if upload_file.filename != '':
-		file_ext = os.path.splitext(uploaded_file.filename)[1]
-		if file_ext not in app.config['UPLOAD_EXTENSIONS']:
-			os.abort(400)
-		uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], upload_file.filename))
-		user = Users(username="test_user")
-
-	return redirect(url_for('site'))
 
 if __name__ == '__main__':
     app.run()
