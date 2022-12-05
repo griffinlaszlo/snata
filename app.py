@@ -254,18 +254,18 @@ def site():
 					story_count += 1
 
 				if story_count <= 100:
-					story_string = f"You like to keep things lowkey...\nYou've only posted to your story {story_count} times\nStill racking up the views though!\nYou have {total_story_views} views across all your stories"
+					story_string = f"You like to keep things lowkey..., You've only posted to your story {story_count} times, Still racking up the views though!, You have {total_story_views} views across all your stories"
 
 				elif story_count >= 100 and story_count <= 300:
-					story_string = f"You could write a book with all these stories...\nYou've posted to your story {story_count} times\nLotta eyes on them too!\nYou have {total_story_views} views across all your stories"
+					story_string = f"You could write a book with all these stories..., You've posted to your story {story_count} times, Lotta eyes on them too!, You have {total_story_views} views across all your stories"
 
 				elif story_count >= 300 and story_count <= 500:
-					story_string = f"You're a story teller!\nYou've posted to your story {story_count} times\nLotta eyes on them too!\nYou have {total_story_views} views across all your stories"
+					story_string = f"You're a story teller!, You've posted to your story {story_count} times, Lotta eyes on them too!, You have {total_story_views} views across all your stories"
 
 				elif story_count > 500:
-					story_string = f"You're an open book!\nYou've posted to your story {story_count} times\nwith {total_story_views} total views across all your stories"
+					story_string = f"You're an open book!, You've posted to your story {story_count} times, with {total_story_views} total views across all your stories"
 					
-			user = Users(username=db_username, snap_username=snap_username, snap_email=snap_email, snap_phone=snap_phone, filename=file.filename, creation_time=ct, 
+			user = Users(username=db_username, password="password", snap_username=snap_username, snap_email=snap_email, snap_phone=snap_phone, filename=file.filename, creation_time=ct, 
 				recent_location=recent_location, frequent_locations=freq_loc_string, recent_snap=recent_snap_string, top3_snappers=top3_string, most_received=most_received, 
 				media_types=media_types, top10_text=top10_text, story_string=story_string)
 
@@ -292,6 +292,7 @@ def query():
 	most_received = post[0]['most_received'].split(",")
 	media_types = post[0]['media_types'].split(",")
 	top10_text = post[0]['top10_text'].split(",")
+	story_string = post[0]['story_string'].split(",")
 
 
 	recent_snap = []
@@ -312,6 +313,9 @@ def query():
 	top10_text_list = []
 	for text in top10_text:
 		top10_text_list.append(text)
+	story_string_list = []
+	for string in story_string:
+		story_string_list.append(string)
 
 	conn.close()
 
@@ -344,7 +348,9 @@ def query():
 			if count == 5:
 				break
 			
-	return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend= first_friend, first5_friends=min_array, story_array=story_array)
+	return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, 
+	most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend= first_friend, 
+	first5_friends=min_array, story_string_list=story_string_list, story_array=story_array)
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
