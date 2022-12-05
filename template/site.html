@@ -20,6 +20,9 @@
 			<h3>Login > Profile > Settings > My Data > Submit Request</h3>
 		</h2>
 	</div>
+	{% if current_user.is_authenticated %}
+	Hi {{ current_user.username }}!
+	{% endif %}
 		<div class="image">
 			<h3>(For more detailed instructions on how to 
 			request your data from Snapchat, click <a href="{{ url_for('instructions') }}">here</a>.)</p>
