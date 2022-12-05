@@ -52,7 +52,11 @@
             <section>
                 <div class="row">
                     <div class="column2">
-                        {{ post[0]['story_string'] }}
+                        {% for story_string in story_string_list %}
+                            <h2>
+                                {{ story_string }}
+                            </h2>
+                        {% endfor %}
                     </div>
                     <div class="column2">
                         <h1>Here are your favorite creators from the Discovery Page!</h1>
