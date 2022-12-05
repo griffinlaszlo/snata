@@ -1,0 +1,41 @@
+<html>
+   <head>
+       <title>
+       Welcome to SNATA
+       </title>
+   <script src="signup.js"></script>
+   <link rel="stylesheet" href="../static/css/login.css">
+   </head>
+   <body>
+       <br>
+       <h1>
+           SNATA
+       </h1>
+       <br>
+       <div class="image">
+           <img src="../static/css/snapchat_bounce.gif" width=400 height=320 >
+       </div>
+      
+       <div class="form-contatiner">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+
+           <ul class="list centered">
+               <li>Create Username</li>
+               <li>{{ form.username }}</li>
+               <li>Create Password</li>
+               <li>
+                {{ form.password }}
+               </li>
+               <li>
+                {{ form.submit }}
+               </li>
+               <li>
+                <a href="{{url_for('login')}}">Login</a>
+               </li>
+              
+           </ul>
+        </form>
+       </div>
+   </body>
+</html>
