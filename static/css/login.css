@@ -71,6 +71,7 @@ will-change: transform;
 .form-container{
 width:250px;
 text-align: center;
+min-height: 200px;
 /* padding: 20px 30px; */
 background-color: #FFF;
 color: #FFFFFF;
@@ -80,7 +81,7 @@ margin-left: 0;
 }
 
 ul.list{
-text-align: left;
+text-align: center;
 font-family: "Avenir Next";
 list-style-type: none;
 background-color: #FFF;
@@ -154,4 +155,10 @@ text-align: center;
 .centered img {
 width: 150px;
 border-radius: 25%;
+}
+
+.horiz {
+	text-align: center;
+	margin: auto;
+	min-height: 20px;
 }
