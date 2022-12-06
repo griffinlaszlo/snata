@@ -15,7 +15,12 @@
        <div class="image">
            <img src="{{ url_for('static', filename='css/snapchat_bounce.gif') }}" width=400 height=320 >
        </div>
-      
+       <div class="horiz">
+        
+        <br>
+        <br>
+        <br>
+      </div>
        <div class="form-contatiner">
         <form method="POST" action="">
             {{ form.hidden_tag() }}
@@ -29,10 +34,22 @@
             <li>
                 <a href="{{url_for('signup')}}">Sign Up</a>
             </li>
-          
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          {% block content %}{% endblock %}
             </ul>
         </form>
        </div>
+       <br>
+       <br>
+       
       
       
       

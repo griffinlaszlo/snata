@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, request, url_for, redirect, render_template
+from flask import Flask, request, url_for, redirect, render_template, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -105,7 +105,7 @@ def site():
 			with ZipFile(file, 'r') as zip:
 				zip.extractall('uploads')
 			# create a new username in the database
-			db_username = "user9"
+			db_username = current_user.username
 
 			# from the user_profile.json grab creation time
 			months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -376,10 +376,11 @@ def login():
 	form = LoginForm()
 	if form.validate_on_submit():
 		user = Users.query.filter_by(username=form.username.data).first()
-		if user:
-			if bcrypt.check_password_hash(user.password, form.password.data):
-				login_user(user)
-				return redirect(url_for('site'))
+		if user and bcrypt.check_password_hash(user.password, form.password.data):
+			login_user(user)
+			return redirect(url_for('site'))
+		else:
+			flash('Username or password incorrect.', 'danger')
 	return render_template('login.html', form=form)
 
 @app.route('/signup', methods=['GET', 'POST'])
