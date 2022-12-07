@@ -105,7 +105,7 @@ def site():
 			with ZipFile(file, 'r') as zip:
 				zip.extractall('uploads')
 			# create a new username in the database
-			db_username = current_user.username
+			# db_username = current_user.username
 
 			# from the user_profile.json grab creation time
 			months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -237,7 +237,7 @@ def site():
 
 			with open('uploads/json/account_history.json', encoding="utf8") as json_file:
 				acct_hist = json.load(json_file)
-				snap_email = acct_hist["Email Change"][0]["Email Address"]
+				# snap_email = acct_hist["Email Change"][0]["Email Address"]
 				snap_phone = acct_hist["Mobile Number Change"][0]["Mobile Number"]
 
 			with open('uploads/json/story_history.json', encoding="utf8") as json_file:
@@ -265,15 +265,29 @@ def site():
 				elif story_count > 500:
 					story_string = f"You're an open book!, You've posted to your story {story_count} times, with {total_story_views} total views across all your stories"
 					
-			user = Users(username=db_username, password="password", snap_username=snap_username, snap_email=snap_email, snap_phone=snap_phone, filename=file.filename, creation_time=ct, 
-				recent_location=recent_location, frequent_locations=freq_loc_string, recent_snap=recent_snap_string, top3_snappers=top3_string, most_received=most_received, 
-				media_types=media_types, top10_text=top10_text, story_string=story_string)
+			user = Users.query.filter_by(username=current_user.username).first()
+			user.snap_username = snap_username
+			user.snap_email = "dshield2@nd.edu"
+			user.snap_phone = snap_phone
+			user.filename = file.filename
+			user.creation_time = ct
+			user.recent_location = recent_location
+			user.frequent_locations=freq_loc_string
+			user.recent_snap=recent_snap_string
+			user.top3_snappers=top3_string
+			user.most_received=most_received 
+			user.media_types=media_types
+			user.top10_text=top10_text
+			user.story_string=story_string
+			# # user = Users(username=db_username, password="password", snap_username=snap_username, snap_email="dshield2@nd.edu", snap_phone=snap_phone, filename=file.filename, creation_time=ct, 
+			# 	recent_location=recent_location, frequent_locations=freq_loc_string, recent_snap=recent_snap_string, top3_snappers=top3_string, most_received=most_received, 
+			# 	media_types=media_types, top10_text=top10_text, story_string=story_string)
 
 			# with open('uploads/json/location_history.json', encoding="utf8") as json_file:
 			# 	loc = json.load(json_file)
 			# location = Location(username=db_username, filename="location_history.json", data=loc)
 
-			db.session.add(user)
+			# db.session.add(user)
 			#db.session.add(location)
 			db.session.commit()
 
@@ -282,10 +296,11 @@ def site():
 	return render_template('site.html')
 
 @app.route('/query', methods=['GET', 'POST'])
+@login_required
 def query():
 	conn = get_db_connection()
 	cursor = conn.cursor()
-	post = cursor.execute('SELECT * FROM Users WHERE username = "user9"').fetchall()
+	post = cursor.execute(f'SELECT * FROM Users WHERE username = "{current_user.username}"').fetchall()
 	recent_snaps = post[0]['recent_snap'].split(",")
 	recent_locs = post[0]['frequent_locations'].split(";")
 	top3_snaps = post[0]['top3_snappers'].split(",")
