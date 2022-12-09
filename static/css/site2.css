@@ -3,7 +3,6 @@ h1, h2{
   color: black;
   align-self: center;
   text-align: center;
-  white-space: pre-line;
 }
 
 .image {
@@ -40,6 +39,7 @@ body .container {
   -ms-scroll-snap-type: y mandatory;
       scroll-snap-type: y mandatory;
   overflow-y: scroll;
+  overflow-x: hidden;
   scroll-behavior: smooth;
 }
 body .container section {
