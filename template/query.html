@@ -2,8 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SNATA</title>
     <link rel="stylesheet" href="static/css/site2.css" type="text/css">
 </head>
@@ -14,36 +12,29 @@
             
             <section>
                 <a href="{{url_for('logout')}}">Log Out</a>
-                <div class="text">
+                <div>
                     <h1>😎 Hello {{ post[0]['snap_username'] }}, Let's take a peek at your data! 😎</h1>
                 </div>
             </section>
 
             <section>
                 <a href="{{url_for('logout')}}">Log Out</a>
-                <h1>
-                    Take a 👀 🔙 to when you created your account
-                </h1>
+                <h1>Take a 👀 🔙 to when you created your account</h1>
                 <h2>{{ post[0]['creation_time'] }}</h2>
             </section>
 
             <section>
                 <a href="{{url_for('logout')}}">Log Out</a>
-                <h1>
-                    Do you remember when you added {{ first_friend[7] }} (@{{ first_friend[6] }})?
-                </h1>
+                <h1>Do you remember when you added {{ first_friend[7] }} (@{{ first_friend[6] }})?</h1>
                 <h1>They were your first added friend!</h1>
             </section>
 
             <section>
                 <a href="{{url_for('logout')}}">Log Out</a>
-                <h1> Here's the rest of your first 5 friends added: </h1>
+                <h1>Here's the rest of your first 5 friends added:</h1>
                 {% for friend in first5_friends %}
                     <h2>{{ friend[7] }} ({{ friend[6] }})</h2>
                 {% endfor %}
-                <h1>
-                    👾 Keep scrolling to see more insights into your Snapchat data 👾
-                </h1>
             </section>
 
             <section>
@@ -59,12 +50,9 @@
                 <h1>Here are your favorite creators from the Discovery Page!</h1>
                 <h1>You've viewed...</h1>
                 {% for story in story_array %}
-                    <h2>
-                        {{ story }}
-                    </h2>
+                    <h2>{{ story }}</h2>
                 {% endfor %}
             </section>
-
 
             <section>
                 <a href="{{url_for('logout')}}">Log Out</a>
@@ -77,7 +65,6 @@
                 {% endfor %}
             </section>
 
-
             <section>
                 <a href="{{url_for('logout')}}">Log Out</a>
                 <h1>Looks to us like you were most recently in...</h1>
@@ -86,9 +73,6 @@
                     <img src="{{ url_for('static', filename='css/location.png') }}" width=250 height=200 >
                 </div>
                 <h2>You can frequently be found in...</h2>
-                <!-- {% for loc in freq_locs %}
-                    <h2>{{ loc }}</h2>
-                {% endfor %} -->
                 <h2>{{ freq_locs[0] }}</h2>
             </section>
 
@@ -100,7 +84,6 @@
                     {% endfor %}
             </section>
 
-
             <section>
                 <a href="{{url_for('logout')}}">Log Out</a>
                     <h1> This is how you like to communicate most on Snap...</h1> 
@@ -108,7 +91,6 @@
                         <h2>{{ media }}</h2>
                     {% endfor %}
             </section>
-
 
             <section>
                 <a href="{{url_for('logout')}}">Log Out</a>
