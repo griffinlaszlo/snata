@@ -56,6 +56,17 @@
             </section>
 
             <section>
+                <h1>Here are your favorite creators from the Discovery Page!</h1>
+                <h1>You've viewed...</h1>
+                {% for story in story_array %}
+                    <h2>
+                        {{ story }}
+                    </h2>
+                {% endfor %}
+            </section>
+
+
+            <section>
                 <a href="{{url_for('logout')}}">Log Out</a>
                 <h1>Here are your favorite creators from the Discovery Page!</h1>
                 <h1>You've viewed...</h1>

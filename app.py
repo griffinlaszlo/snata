@@ -105,7 +105,7 @@ def site():
 			with ZipFile(file, 'r') as zip:
 				zip.extractall('uploads')
 			# create a new username in the database
-			# db_username = current_user.username
+			db_username = current_user.username
 
 			# from the user_profile.json grab creation time
 			months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
