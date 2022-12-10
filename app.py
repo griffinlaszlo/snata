@@ -143,9 +143,9 @@ def site():
 
 				def user_profile_info(file):
 					
-					breakdown = "Breakdown of Time Spent on App\n"
+					breakdown = "Breakdown of Time Spent on App,\n"
 					for i in file["Breakdown of Time Spent on App"]:
-						breakdown += i + "\n"
+						breakdown += i + ",\n"
 						
 					engagement = "Engagement\n"
 					for i in file["Engagement"]:
@@ -155,12 +155,6 @@ def site():
 					return breakdown, engagement, num_of_interest_categories
 					
 				breakdown, engagement, num_of_interest_categories = user_profile_info(user_profile)
-				print('breakdown')
-				print(breakdown)
-				print('engagement')
-				print(engagement)
-				print('num of interest categories')
-				print(num_of_interest_categories)
 
 			# latest and frequent locations
 			with open('uploads/json/location_history.json', encoding="utf8") as loc_json:
@@ -205,8 +199,6 @@ def site():
 				the_list = json_memories["Saved Media"]
 				link_to_memory = the_list[-1]["Download Link"]
 				first_memory_string = f"Your first memory was taken at {json_memories['Saved Media'][-1]['Date']}, it was a {json_memories['Saved Media'][-1]['Media Type']}"
-				print(link_to_memory)
-				print(first_memory_string)
 		
 			with open('uploads/json/subscriptions.json', encoding="utf8") as subscriptions_json:
 				#def num_of_subscriptions(file):
@@ -215,12 +207,6 @@ def site():
 				publishers = len(json_subscriptions["Public Users"])
 				stories = len(json_subscriptions["Stories"])
 				total_subs = stories + public_users + publishers
-
-				print('total subs')
-				print(total_subs)
-				print(stories) 
-				print(publishers) 
-				print(public_users)
 				
 				#total_subs, stories, publishers, public_users = num_of_subscriptions(subscriptions_json)
 
@@ -265,10 +251,8 @@ def site():
 					total_snaps_received = snaps_received_unsaved + snaps_received_saved
 					snaps_sent_saved = len(file["Sent Saved Chat History"])
 					snaps_sent_unsaved = len(file["Sent Unsaved Chat History"])
-					total_snaps_sent = snaps_received_unsaved + snaps_received_saved
+					total_snaps_sent = snaps_sent_unsaved + snaps_sent_saved
 					total_snaps_saved = snaps_received_saved + snaps_sent_saved
-
-
 
 					return total_snaps_sent, total_snaps_received, total_snaps_saved
 
@@ -288,21 +272,14 @@ def site():
 									media[v] = media.get(v, 0) + 1
 								elif k == 'Text':
 									text[v] = text.get(v, 0) + 1
-						# print()
-						# print('Top 5 Received Saved Chat History:')
-						# print()
 
 						for k, v in sorted(received.items(), key=lambda x: x[1], reverse=True)[:10]:
 							most_received = most_received + k + ": " + str(v) + ", "
 
 						# rank media types by count
 
-						# print('Media Types:')
-
 						for k, v in sorted(media.items(), key=lambda x: x[1], reverse=True):
 							media_types = media_types + k + ": " + str(v) + ", "
-
-						# print('Top 10 Text Sayings:')
 
 						count=0
 						for k, v in sorted(text.items(), key=lambda x: x[1], reverse=True):
@@ -374,8 +351,8 @@ def site():
 			
 			user.name_changes = name_changes
 
-			# user.link_to_memory = link_to_memory
-			# user.first_memory_string =  first_memory_string
+			user.link_to_memory = link_to_memory
+			user.first_memory_string =  first_memory_string
 
 			user.total_subs = total_subs
 			user.stories = stories
@@ -416,7 +393,8 @@ def query():
 	media_types = post[0]['media_types'].split(",")
 	top10_text = post[0]['top10_text'].split(",")
 	story_string = post[0]['story_string'].split(",")
-
+	breakdown_string = post[0]['breakdown'].split(",")
+	engagement_string = post[0]['engagement'].split(",")
 
 	recent_snap = []
 	for snap in recent_snaps:
@@ -439,6 +417,14 @@ def query():
 	story_string_list = []
 	for string in story_string:
 		story_string_list.append(string)
+	
+	breakdown_list = []
+	for breakdown in breakdown_string:
+		breakdown_list.append(breakdown)
+	engagement_list = []
+	for engagement in engagement_string:
+		engagement_list.append(engagement)
+	
 
 	conn.close()
 
@@ -473,7 +459,8 @@ def query():
 			
 	return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, 
 	most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend= first_friend, 
-	first5_friends=min_array, story_string_list=story_string_list, story_array=story_array)
+	first5_friends=min_array, story_string_list=story_string_list, story_array=story_array, breakdown_list=breakdown_list,
+	engagement_list=engagement_list)
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
