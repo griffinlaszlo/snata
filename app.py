@@ -59,6 +59,21 @@ class Users(db.Model, UserMixin):
 	story_string = db.Column(db.Text())
 	top5story_string = db.Column(db.Text())
 	
+	breakdown = db.Column(db.Text())
+	engagement = db.Column(db.Text())
+	num_of_interests = db.Column(db.Integer())
+	name_changes =  db.Column(db.Text())
+	link_to_memory = db.Column(db.Text())
+	first_memory_string =  db.Column(db.Text())
+	total_subs = db.Column(db.Integer())
+	stories = db.Column(db.Integer())
+	publishers = db.Column(db.Integer())
+	public_users = db.Column(db.Integer())
+	total_snaps_sent = db.Column(db.Integer())
+	total_snaps_received = db.Column(db.Integer())
+	total_snaps_saved = db.Column(db.Integer())
+
+	
 	#data = db.Column(db.LargeBinary) -- data=file.read()
 
 	def __repr__(self):
@@ -125,6 +140,28 @@ def site():
 									second += ' AM'
 								month = months[int(month) - 1]
 								ct = month + " " + day + ", " + year + " at exactly " + hour + ":" + minute + ":" + second
+
+				def user_profile_info(file):
+					
+					breakdown = "Breakdown of Time Spent on App\n"
+					for i in file["Breakdown of Time Spent on App"]:
+						breakdown += i + "\n"
+						
+					engagement = "Engagement\n"
+					for i in file["Engagement"]:
+						engagement += f"{i['Event']}, {i['Occurrences']}\n"
+						
+					num_of_interest_categories = len(file["Interest Categories"])
+					return breakdown, engagement, num_of_interest_categories
+					
+				breakdown, engagement, num_of_interest_categories = user_profile_info(user_profile)
+				print('breakdown')
+				print(breakdown)
+				print('engagement')
+				print(engagement)
+				print('num of interest categories')
+				print(num_of_interest_categories)
+
 			# latest and frequent locations
 			with open('uploads/json/location_history.json', encoding="utf8") as loc_json:
 				loc_history = json.load(loc_json)
@@ -160,6 +197,33 @@ def site():
 			# do 3 people you snap the most next
 			iter = 0
 			recent_snap = []
+
+			with open('uploads/json/memories_history.json', encoding="utf8") as memories_json:
+
+				#def first_memory(file):
+				json_memories = json.load(memories_json)
+				the_list = json_memories["Saved Media"]
+				link_to_memory = the_list[-1]["Download Link"]
+				first_memory_string = f"Your first memory was taken at {json_memories['Saved Media'][-1]['Date']}, it was a {json_memories['Saved Media'][-1]['Media Type']}"
+				print(link_to_memory)
+				print(first_memory_string)
+		
+			with open('uploads/json/subscriptions.json', encoding="utf8") as subscriptions_json:
+				#def num_of_subscriptions(file):
+				json_subscriptions = json.load(subscriptions_json)
+				public_users = len(json_subscriptions["Public Users"])
+				publishers = len(json_subscriptions["Public Users"])
+				stories = len(json_subscriptions["Stories"])
+				total_subs = stories + public_users + publishers
+
+				print('total subs')
+				print(total_subs)
+				print(stories) 
+				print(publishers) 
+				print(public_users)
+				
+				#total_subs, stories, publishers, public_users = num_of_subscriptions(subscriptions_json)
+
 			with open('uploads/json/snap_history.json', encoding="utf8") as snap_json:
 				snap_history = json.load(snap_json)
 				top3_dict = {}
@@ -194,6 +258,22 @@ def site():
 			top10_text = ""
 			with open('uploads/json/chat_history.json', encoding="utf8") as chat_json:
 				chat_history = json.load(chat_json)
+				def total_snaps(file): 
+
+					snaps_received_saved = len(file["Received Saved Chat History"])
+					snaps_received_unsaved = len(file["Received Unsaved Chat History"])
+					total_snaps_received = snaps_received_unsaved + snaps_received_saved
+					snaps_sent_saved = len(file["Sent Saved Chat History"])
+					snaps_sent_unsaved = len(file["Sent Unsaved Chat History"])
+					total_snaps_sent = snaps_received_unsaved + snaps_received_saved
+					total_snaps_saved = snaps_received_saved + snaps_sent_saved
+
+
+
+					return total_snaps_sent, total_snaps_received, total_snaps_saved
+
+				total_snaps_sent, total_snaps_received, total_snaps_saved = total_snaps(chat_history)	
+
 				for key, value in chat_history.items():
 					if key == 'Received Saved Chat History':
 						received = {}
@@ -239,6 +319,14 @@ def site():
 				acct_hist = json.load(json_file)
 				# snap_email = acct_hist["Email Change"][0]["Email Address"]
 				snap_phone = acct_hist["Mobile Number Change"][0]["Mobile Number"]
+				def display_name_changes(file):
+
+					name_changes = "You had a name change on:"
+					for i in file["Display Name Change"]:
+						name_changes += f"{i['Date']}, {i['Display Name']}"
+						
+					return name_changes	
+				name_changes  = display_name_changes(acct_hist)
 
 			with open('uploads/json/story_history.json', encoding="utf8") as json_file:
 				story_hist = json.load(json_file)
@@ -279,6 +367,25 @@ def site():
 			user.media_types=media_types
 			user.top10_text=top10_text
 			user.story_string=story_string
+
+			user.breakdown = breakdown
+			user.engagement = engagement
+			user.num_of_interests = num_of_interest_categories
+			
+			user.name_changes = name_changes
+
+			# user.link_to_memory = link_to_memory
+			# user.first_memory_string =  first_memory_string
+
+			user.total_subs = total_subs
+			user.stories = stories
+			user.publishers = publishers
+			user.public_users = public_users
+
+			user.total_snaps_sent = total_snaps_sent
+			user.total_snaps_received = total_snaps_received
+			user.total_snaps_saved = total_snaps_saved
+
 			# # user = Users(username=db_username, password="password", snap_username=snap_username, snap_email="dshield2@nd.edu", snap_phone=snap_phone, filename=file.filename, creation_time=ct, 
 			# 	recent_location=recent_location, frequent_locations=freq_loc_string, recent_snap=recent_snap_string, top3_snappers=top3_string, most_received=most_received, 
 			# 	media_types=media_types, top10_text=top10_text, story_string=story_string)
@@ -287,7 +394,8 @@ def site():
 			# 	loc = json.load(json_file)
 			# location = Location(username=db_username, filename="location_history.json", data=loc)
 
-			# db.session.add(user)
+			db.session.add(user)
+			#db.session.add(chat_history)
 			#db.session.add(location)
 			db.session.commit()
 
