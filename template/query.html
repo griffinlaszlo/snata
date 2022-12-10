@@ -6,101 +6,145 @@
     <link rel="stylesheet" href="static/css/site2.css" type="text/css">
 </head>
 <body>
-    
     <div class="container">
         <div class='post'>
             
             <section>
-                <a href="{{url_for('logout')}}">Log Out</a>
-                <div>
-                    <h1>😎 Hello {{ post[0]['snap_username'] }}, Let's take a peek at your data! 😎</h1>
+                <form action="{{url_for('logout')}}" target="_blank">
+                    <button class="button-28" type="submit" role="button">LOG OUT</button>
+                </form>
+                <div class="image">
+                <h2>👋 Hello {{ post[0]['snap_username'] }}<br>Let's take a peek at your data! 👋</h2>
                 </div>
             </section>
 
             <section>
-                <a href="{{url_for('logout')}}">Log Out</a>
-                <h1>Take a 👀 🔙 to when you created your account</h1>
+			<form action="{{url_for('logout')}}" target="_blank">
+				<button class="button-28" type="submit" role="button">LOG OUT</button>
+			</form>
+                <div class="image">
+                <h2>Take a 👀 🔙 to when you created your account</h2>
                 <h2>{{ post[0]['creation_time'] }}</h2>
+                </div>
             </section>
 
             <section>
-                <a href="{{url_for('logout')}}">Log Out</a>
-                <h1>Do you remember when you added {{ first_friend[7] }} (@{{ first_friend[6] }})?</h1>
-                <h1>They were your first added friend!</h1>
+			<form action="{{url_for('logout')}}" target="_blank">
+				<button class="button-28" type="submit" role="button">LOG OUT</button>
+			</form>
+                <div class="image">
+                <h2>Do you remember when you added <b>{{ first_friend[7] }}</b> (@{{ first_friend[6] }})?</h2>
+                <h2>They were your <b>first</b> added friend!</h2>
+                </div>
             </section>
 
             <section>
-                <a href="{{url_for('logout')}}">Log Out</a>
-                <h1>Here's the rest of your first 5 friends added:</h1>
+			<form action="{{url_for('logout')}}" target="_blank">
+				<button class="button-28" type="submit" role="button">LOG OUT</button>
+			</form>
+                <div class="image">
+                <h2>After <b>{{ first_friend[7] }}</b>, <br>
+                    the <b>next</b> additions to your network were...</h2>
                 {% for friend in first5_friends %}
-                    <h2>{{ friend[7] }} ({{ friend[6] }})</h2>
+                    <h2>@{{ friend[6] }}</h2>
                 {% endfor %}
+                </div>
             </section>
 
             <section>
-                <a href="{{url_for('logout')}}">Log Out</a>
+			<form action="{{url_for('logout')}}" target="_blank">
+				<button class="button-28" type="submit" role="button">LOG OUT</button>
+			</form>
+                <div class="image">
                 {% for story_string in story_string_list %}
                     <h2>
                         {{ story_string }}
                     </h2>
                 {% endfor %}
+                <h2>Keep telling <b>your story!</b></h2>
+                </div>
             </section>
 
+
             <section>
-                <h1>Here are your favorite creators from the Discovery Page!</h1>
-                <h1>You've viewed...</h1>
+			<form action="{{url_for('logout')}}" target="_blank">
+				<button class="button-28" type="submit" role="button">LOG OUT</button>
+			</form>
+                <div class="image">
+                <h2>It looks like you are inspired by those who <b>create</b>...</h2>
+                <h2>Here are your favorite creators from the <b>Discovery Page</b>!</h2>
+                <h2>You've viewed...</h2>
                 {% for story in story_array %}
                     <h2>{{ story }}</h2>
                 {% endfor %}
+                </div>
             </section>
 
             <section>
-                <a href="{{url_for('logout')}}">Log Out</a>
-                <h1>Here are your favorite creators from the Discovery Page!</h1>
-                <h1>You've viewed...</h1>
+			<form action="{{url_for('logout')}}" target="_blank">
+				<button class="button-28" type="submit" role="button">LOG OUT</button>
+			</form>
+                <div class="image">
+                <h2>These are a few <b>stories</b> you enjoy the most...</h2>
                 {% for story in story_array %}
                     <h2>
                         {{ story }}
                     </h2>
                 {% endfor %}
+                </div> 
             </section>
 
             <section>
-                <a href="{{url_for('logout')}}">Log Out</a>
-                <h1>Looks to us like you were most recently in...</h1>
-                <h2>{{ post[0]['recent_location'] }}📍</h2>
+			<form action="{{url_for('logout')}}" target="_blank">
+				<button class="button-28" type="submit" role="button">LOG OUT</button>
+			</form>
                 <div class="image">
-                    <img src="{{ url_for('static', filename='css/location.png') }}" width=250 height=200 >
+                <h2>According to us, you were recently in</h2>
+                <h2><b>{{ post[0]['recent_location'] }}📍</b></h2>
+                <h2>and can frequently be found in</h2>
+                <h2><b>{{ freq_locs[0] }}</b></h2>
                 </div>
-                <h2>You can frequently be found in...</h2>
-                <h2>{{ freq_locs[0] }}</h2>
             </section>
 
             <section>
-                <a href="{{url_for('logout')}}">Log Out</a>
-                    <h1>Here are some of your top 10 sayings...</h1>
+			<form action="{{url_for('logout')}}" target="_blank">
+				<button class="button-28" type="submit" role="button">LOG OUT</button>
+			</form>
+                <div class="image">
+                    <h2>Here are some of your top 10 sayings...</h2>
                     {% for saying in top10_text %}
                         <h2>{{ saying }}</h2>
                     {% endfor %}
+                </div>
             </section>
 
             <section>
-                <a href="{{url_for('logout')}}">Log Out</a>
-                    <h1> This is how you like to communicate most on Snap...</h1> 
+			<form action="{{url_for('logout')}}" target="_blank">
+				<button class="button-28" type="submit" role="button">LOG OUT</button>
+			</form>
+                <div class="image">
+                    <h2> This is how you like to communicate most on Snap...</h2> 
                     {% for media in media_types %}
                         <h2>{{ media }}</h2>
                     {% endfor %}
+                </div>
             </section>
 
             <section>
-                <a href="{{url_for('logout')}}">Log Out</a>
-                <h1> Here is who snaps you the most...</h1> 
+			<form action="{{url_for('logout')}}" target="_blank">
+				<button class="button-28" type="submit" role="button">LOG OUT</button>
+			</form>
+                <div class="image">
+                <h2> Here is who snaps you the most...</h2> 
                 {% for received in most_received %}
                     <h2>{{ received }}</h2>
                 {% endfor %}
+                </div>
             </section>
 
         </div>
     </div>
+
 </body>
+
 </html>

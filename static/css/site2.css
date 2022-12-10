@@ -1,57 +1,29 @@
-h1, h2{
-  font-family: 'Graphik', Helvetica, sans-serif; 
-  color: black;
-  align-self: center;
-  text-align: center;
-}
-
-.image {
-	text-align: center;
-}
-
-.column {
-	float: left;
-	width: 33.33%;
-}
-
-.column {
-	float: left;
-	width: 33.33%;
-}
-  
-/* Clear floats after the columns */
-.row:after {
-	content: "";
-	display: table;
-	clear: both;
-}
-
 body {
-  width: 100vw;
-  height: 100vh;
+  width: 110vw;
+  height: 110vh;
   margin: 0;
   background-color: #FFFC33;
   -webkit-font-smoothing: antialiased;
 }
 body .container {
   width: 100%;
-  height: 100%;
+  height: 110%;
   -ms-scroll-snap-type: y mandatory;
       scroll-snap-type: y mandatory;
   overflow-y: scroll;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  align-items: center;
+  justify-content: center;
 }
 body .container section {
   display: block;
   scroll-snap-stop: always;
   justify-content: center;
   align-items: center;
-  top: 50%;
-  left: 50%;
-  width: 100vw;
-  height: 100vh;
-  scroll-snap-align: start;
+  width: 110vw;
+  height: 110vh;
+  scroll-snap-align: center;
 }
 body .container section:nth-of-type(1) {
   background-color: #FFFC33;
@@ -66,7 +38,82 @@ body .container section:nth-of-type(3) {
   color: #FFFC33;
 }
 body .container section h1 {
-  padding-top: 225px;
-  font-family: "Graphik", Helvetica, sans-serif;
+  font-family: "Avenir Next";
   color: black;
+  font-size: 3em;
+}
+body .container section h2 {
+  text-align: center;
+  font-family: "Avenir Next";
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+  color: #000000;
+}
+body .container section h3 {
+  text-align: center;
+  font-family: "Avenir Next";
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 30px;
+  color: #000000;
+}
+
+h1 {
+  font-family: "Avenir Next";
+  color: black;
+  font-size: 3em;
+}
+
+h2 {
+  text-align: center;
+  font-family: "Avenir Next";
+  color: #000000;
+}
+
+h3 {
+  text-align: center;
+  font-family: "Avenir Next";
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 30px;
+  color: #000000;
+}
+
+.image {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.button-28 {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background-color: rgb(0, 0, 0);
+  box-sizing: border-box;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  font-family: "Graphik", Helvetica, sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  line-height: normal;
+  min-height: 40px;
+  min-width: 0px;
+  text-align: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  touch-action: manipulation;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgb(26, 26, 26);
+  -o-border-image: initial;
+     border-image: initial;
+  border-radius: 15px;
+  margin: 4px;
+  outline: none;
+  padding: 12px 18px;
+  text-decoration: none;
+  transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
 }/*# sourceMappingURL=site2.css.map */

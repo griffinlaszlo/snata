@@ -7,39 +7,35 @@
 	<link rel="stylesheet" href="../static/css/site.css">
 	</head>
 	<body>
-		<a href="{{url_for('logout')}}">Log Out</a>
+		<div>
+			<form action="{{url_for('logout')}}" target="_blank">
+				<button class="button-28" type="submit" role="button">LOG OUT</button>
+			</form>
+		<div class="image">
+		<!-- 5 </br>s -->
 		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		
 		<h1>
 			SNATA
 		</h1>
-		
-		<br>
-		<div class="image">
-		<h2>
-			How to request your data from Snapchat:
-			<h3>Login > Profile > Settings > My Data > Submit Request</h3>
-		</h2>
 	</div>
 		<div class="image">
-			<h3>(For more detailed instructions on how to 
-			request your data from Snapchat, click <a href="{{ url_for('instructions') }}">here</a>.)</p>
+			<h3>For detailed instructions on how to
+			log in and request <br> your data from Snapchat,
+			 click <a href="{{ url_for('instructions') }}">here</a>.</p>
 			</h3>
 			</div>
-			<div>
-				<form action="https://accounts.snapchat.com/accounts/login" target="_blank">
-					<button class="button-27" type="submit" role="button">LOG INTO SNAPCHAT</button>
-				</form>
-			</div>
-		<h2> 
-			Upload your (.zip) file to see some spectacular insights into your Snapchat data! 
-		</h2>
-		<br>
-		<br>
-		
+		<h3> 
+			Otherwise, upload your (.zip) file to see some <br> spectacular insights into your Snapchat data! 
+		</h3>
 		<div class="input">
 			<form method="POST" action="" enctype="multipart/form-data">
 				<input name='data_zip_file' type="file" accept=".zip"/>
-				<div class="image">
+				<div>
 					<br />
 					<form action="{{ url_for('query') }}">
 						<button class="button-27" type="submit" role="button">SHOW DATA</button>
@@ -47,20 +43,6 @@
 				</div>
 			</form>
 		</div>
-
-		<br>
-		<div class="image">
-			<img src="{{ url_for('static', filename='css/snapchat_bounce.gif') }}" width=500 height=400 >
-		</div>
-	<a class="button button-regular button-primary css-127igw8" 
-		href="https://web.snapchat.com?ref=web_hero_login_button">
-		<picture>
-			<img alt="Computer Image" src="https://images.ctfassets.net/adclj4ijug4e/2mdwMtA6MPyOcs52zq4Zws/b1ff63bd0cced29d5544cde242ade9d5/Laptop_icon.svg">
-		</picture>
-		<span class="margin-wrapper">
-			<p>Log in to chat</p>
-		</span>
-	</a>
 
 	</body>
 
