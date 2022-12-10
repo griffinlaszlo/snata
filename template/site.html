@@ -25,7 +25,7 @@
 		<div class="image">
 			<h3>For detailed instructions on how to
 			log in and request <br> your data from Snapchat,
-			 click <a href="{{ url_for('instructions') }}">here</a>.</p>
+			 click <a href="{{ url_for('instructions') }}">here</a>
 			</h3>
 		</div>
 		<h3> 
@@ -35,7 +35,7 @@
 			<form method="POST" action="" enctype="multipart/form-data">
 				<input name='data_zip_file' type="file" accept=".zip"/>
 				<div>
-					<br />
+					<br>
 					<form action="{{ url_for('query') }}">
 						<button class="button-27" type="submit" role="button">SHOW DATA</button>
 					</form>
