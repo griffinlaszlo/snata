@@ -142,6 +142,46 @@
                 </div>
             </section>
 
+            <section>
+                {% for breakdown in breakdown_list %}
+                    <h2>{{ breakdown }}</h2>
+                {% endfor %}
+            </section>
+
+            <section>
+                {% for engagement in engagement_list %}
+                    <h2>{{ engagement }}</h2>
+                {% endfor %}
+            </section>
+
+            <section>
+                <h1>Here are number of topics you've demonstrated interest in</h1>
+                <h1>{{ post[0]['num_of_interests'] }}</h1>
+            </section>
+
+            <section>
+                <h1>Here's the link to your first memory</h1>
+                <h3>{{ post[0]['link_to_memory'] }}</h3>
+                <h2>{{ post[0]['first_memory_string'] }}</h2>
+            </section>
+
+            <section>
+                <h2>{{ post[0]['name_changes'] }}</h2>
+            </section>
+
+            <section>
+                <h1>You have subscribed to a total of {{ post[0]['total_subs'] }} users!</h1>
+                <h1>The amount of stories you are subscribed to: {{ post[0]['stories'] }}</h1>
+                <h1>The amount of publishers you are subscribed to: {{ post[0]['publishers'] }}</h1>
+                <h1>The amount of public users you are subscribed to: {{ post[0]['public_users'] }}</h1>
+            </section>
+
+            <section>
+                <h1>You have sent a total of {{ post[0]['total_snaps_sent'] }} snaps</h1>
+                <h1>You have received a total of {{ post[0]['total_snaps_received'] }} snaps</h1>
+                <h1>You have saved a total of {{ post[0]['total_snaps_saved'] }} snaps</h1>
+            </section>
+
         </div>
     </div>
 
