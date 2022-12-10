@@ -8,17 +8,10 @@
    </head>
    <body>
        <br>
-       
        <br>
-       <!-- <div class="image">
-           <img src="{{ url_for('static', filename='css/snapchat_bounce.gif') }}" width=400 height=320 >
-       </div> -->
-       <div class="horiz">
-        
         <br>
         <br>
         <br>
-      </div>
        <div class="form-contatiner">
         <h1>
           SNATA
@@ -33,7 +26,7 @@
                 {{ form.submit }}
             </li>
             <li>
-                <a href="{{url_for('signup')}}">Sign Up</a>
+              <a style="color:white" href="{{url_for('signup')}}">Sign up </a>
             </li>
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}

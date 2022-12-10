@@ -7,7 +7,7 @@ h1 {
 h2 {
 	text-align: center;
 	font-family: "Avenir Next";
-	font-size: 1.5em;
+  font-size: 18px;
 }
 
 h3 {
@@ -20,12 +20,12 @@ h3 {
 }
 
 .input {
+  text-align: center;
 	margin: auto;
-	text-align: center;
-	border: 3px solid #34ebdb;
-	border-radius: 4px;
-	background-color: white;
-	width: 20%;
+	border: 3px solid #FFFC33;
+	border-radius: 6px;
+	background-color: #FFFC33;
+  width: auto;
 }
 
 .image {
@@ -52,12 +52,11 @@ body {
   color: #FFFFFF;
   cursor: pointer;
   font-family: "Avenir Next";
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   line-height: normal;
   margin: auto;
-  min-height: 60px;
-  min-width: 0;
+  max-width: 200px;
   outline: none;
   padding: 16px 24px;
   text-align: center;
@@ -68,14 +67,75 @@ body {
   touch-action: manipulation;
   width: 40%;
   will-change: transform;
-}
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* keep button same size as page expands */
+  flex-shrink: 0;
 
-.button-27 {
+}
+.button-28 {
+  appearance: none;
+  background-color: rgb(0, 0, 0);
+  box-sizing: border-box;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  font-family: "Graphik", Helvetica, sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  line-height: normal;
+  min-height: 40px;
+  min-width: 0px;
+  text-align: center;
+  user-select: none;
+  touch-action: manipulation;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgb(26, 26, 26);
+  border-image: initial;
+  border-radius: 15px;
+  margin: 4px;
+  outline: none;
+  padding: 12px 18px;
+  text-decoration: none;
+  transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
+}
+/* .button-28 {
+  appearance: none;
+  background-color: #000000;
+  border: 2px solid #1A1A1A;
+  border-radius: 15px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-family: "Avenir Next";
+  font-size: 12px;
+  font-weight: 600;
+  line-height: normal;
+  margin: 0;
+  max-width: 40%;
+  outline: none;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  will-change: transform;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+
+} */
+
+/* .button-27 {
   display: block;
   margin: auto;
   width: 40%;
   height: 60px;
-}
+} */
 
 .button-27:disabled {
   pointer-events: none;
@@ -93,29 +153,6 @@ body {
   transform: translateY(0);
 }
 
-/* Split the screen in half */
-.split {
-	height: 100%;
-	width: 50%;
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	overflow-x: hidden;
-	padding-top: 20px;
-  }
-  
-  /* Control the left side */
-  .left {
-	left: 0;
-
-  }
-  
-  /* Control the right side */
-  .right {
-	right: 0;
-
-  }
-  
   /* If you want the content centered horizontally and vertically */
   .centered {
 	position: absolute;

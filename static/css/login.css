@@ -85,9 +85,10 @@ ul.list{
 text-align: center;
 font-family: "Avenir Next";
 list-style-type: none;
-background-color: #FFF;
+background-color: black;
 border-radius: 10px;
 padding: 0px;
+font-weight: 500;
 }
 
 
@@ -97,6 +98,7 @@ margin: auto;
 font-family: "Avenir Next";
 padding: 2px 20px;
 text-align: center;
+color: white;
 
 }
 
@@ -106,7 +108,7 @@ text-align: center;
 padding: 8px 0px;
 border:none;
 font-family: "Avenir Next";
-background-color: #DDD;
+background-color: rgb(236, 243, 163);
 border-radius: 5px;
 }
 
