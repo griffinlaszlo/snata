@@ -58,7 +58,7 @@
 				<button class="button-28" type="submit" role="button">LOG OUT</button>
 			</form>
                 <div class="image">
-                <h2>Do you remember when you added <b>{{ first_friend[7] }}</b> (@{{ first_friend[6] }})?</h2>
+                <h2>Do you remember when you added <b>{{ first_friend_name }}</b> (@{{ first_friend_username }})?</h2>
                 <h2>They were your <b>first</b> added friend!</h2>
                 </div>
             </section>
@@ -68,10 +68,10 @@
 				<button class="button-28" type="submit" role="button">LOG OUT</button>
 			</form>
                 <div class="image">
-                <h2>After <b>{{ first_friend[7] }}</b>, <br>
+                <h2>After <b>{{ first_friend_name }}</b>, <br>
                     the <b>next</b> additions to your network were...</h2>
                 {% for friend in first5_friends %}
-                    <h2>@{{ friend[6] }}</h2>
+                    <h2>@{{ friend }}</h2>
                 {% endfor %}
                 </div>
             </section>

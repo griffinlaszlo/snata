@@ -73,6 +73,10 @@ class Users(db.Model, UserMixin):
 	total_snaps_received = db.Column(db.Integer())
 	total_snaps_saved = db.Column(db.Integer())
 
+	first_friend = db.Column(db.Text())
+	first5_friends = db.Column(db.Text())
+	story_array = db.Column(db.Text())
+
 	
 	#data = db.Column(db.LargeBinary) -- data=file.read()
 
@@ -329,6 +333,44 @@ def site():
 
 				elif story_count > 500:
 					story_string = f"You're an open book!, You've posted to your story {story_count} times, with {total_story_views} total views across all your stories"
+
+			with open('uploads/json/friends.json', encoding="utf8") as json_file:
+				friends = json.load(json_file)
+				min_array = []
+				for i in friends["Friends"]:
+					current = [int(i["Creation Timestamp"][0:4]), int(i["Creation Timestamp"][5:7]), int(i["Creation Timestamp"][8:10]), int(i["Creation Timestamp"][11:13]),  int(i["Creation Timestamp"][14:16]), int(i["Creation Timestamp"][17:19]), i["Username"], i["Display Name"]]
+					min_array.append(current)
+
+				min_array = sorted(min_array)
+				first_friend = min_array[2]
+				first_friend = first_friend[7] + " " + first_friend[6]
+				min_array = min_array[3:7] # first two are you and teamsnap get other first 5 friends added
+				first_friend_string = ""
+				for friend in min_array:
+					first_friend_string = first_friend_string + friend[6] + ","
+				first_friend_string = first_friend_string[:-1]
+
+			with open('uploads/json/story_history.json', encoding="utf8") as json_file:
+				story_hist = json.load(json_file)
+
+				viewer = {}
+				count = 0
+				for x in story_hist["Friend and Public Story Views"]:
+					for key, value in x.items():
+						if key == 'View':
+							viewer[value] = viewer.get(value, 0) + 1
+
+				story_array = []
+				for k, v in sorted(viewer.items(), key=lambda x: x[1], reverse=True):
+					if k != '' and k != 'no name':
+						count += 1
+						story_array.append(f"@{k}'s story {v} times")
+					if count == 5:
+						break
+				story_array_string = ""
+				for story in story_array:
+					story_array_string = story_array_string + story + ","
+				story_array_string = story_array_string[:-1]
 					
 			user = Users.query.filter_by(username=current_user.username).first()
 			user.snap_username = snap_username
@@ -363,6 +405,10 @@ def site():
 			user.total_snaps_received = total_snaps_received
 			user.total_snaps_saved = total_snaps_saved
 
+			user.first_friend = first_friend
+			user.first5_friends = first_friend_string
+			user.story_array = story_array_string
+
 			# # user = Users(username=db_username, password="password", snap_username=snap_username, snap_email="dshield2@nd.edu", snap_phone=snap_phone, filename=file.filename, creation_time=ct, 
 			# 	recent_location=recent_location, frequent_locations=freq_loc_string, recent_snap=recent_snap_string, top3_snappers=top3_string, most_received=most_received, 
 			# 	media_types=media_types, top10_text=top10_text, story_string=story_string)
@@ -383,92 +429,80 @@ def site():
 @app.route('/query', methods=['GET', 'POST'])
 @login_required
 def query():
-	conn = get_db_connection()
-	cursor = conn.cursor()
-	post = cursor.execute(f'SELECT * FROM Users WHERE username = "{current_user.username}"').fetchall()
-	recent_snaps = post[0]['recent_snap'].split(",")
-	recent_locs = post[0]['frequent_locations'].split(";")
-	top3_snaps = post[0]['top3_snappers'].split(",")
-	most_received = post[0]['most_received'].split(",")
-	media_types = post[0]['media_types'].split(",")
-	print(media_types)
-	media_dict = {}
-	media_dict['Media Type'] = 'Amount Sent'
-	for media in media_types:
-		if ':' in media:
-			split = media.split(":")
-			media_dict[split[0].strip()] = int(split[1])
-	print(media_dict)
-	top10_text = post[0]['top10_text'].split(",")
-	story_string = post[0]['story_string'].split(",")
-	breakdown_string = post[0]['breakdown'].split(",")
-	engagement_string = post[0]['engagement'].split(",")
+	error = None
+	try:
+		conn = get_db_connection()
+		cursor = conn.cursor()
+		post = cursor.execute(f'SELECT * FROM Users WHERE username = "{current_user.username}"').fetchall()
+		recent_snaps = post[0]['recent_snap'].split(",")
+		recent_locs = post[0]['frequent_locations'].split(";")
+		top3_snaps = post[0]['top3_snappers'].split(",")
+		most_received = post[0]['most_received'].split(",")
+		media_types = post[0]['media_types'].split(",")
+		media_dict = {}
+		media_dict['Media Type'] = 'Amount Sent'
+		for media in media_types:
+			if ':' in media:
+				split = media.split(":")
+				media_dict[split[0].strip()] = int(split[1])
+		top10_text = post[0]['top10_text'].split(",")
+		story_string = post[0]['story_string'].split(",")
+		breakdown_string = post[0]['breakdown'].split(",")
+		engagement_string = post[0]['engagement'].split(",")
 
-	recent_snap = []
-	for snap in recent_snaps:
-		recent_snap.append(snap)
-	freq_locs = []
-	for loc in recent_locs:
-		freq_locs.append(loc)
-	top3_snappers = []
-	for snapper in top3_snaps:
-		top3_snappers.append(snapper)
-	most_received_list = []
-	for received in most_received:
-		most_received_list.append(received)
-	media_types_list = []
-	for media in media_types:
-		media_types_list.append(media)
-	top10_text_list = []
-	for text in top10_text:
-		top10_text_list.append(text)
-	story_string_list = []
-	for string in story_string:
-		story_string_list.append(string)
-	
-	breakdown_list = []
-	for breakdown in breakdown_string:
-		breakdown_list.append(breakdown)
-	engagement_list = []
-	for engagement in engagement_string:
-		engagement_list.append(engagement)
-	
+		first_friend = post[0]['first_friend'].split(" ")
+		first5_friends = post[0]['first5_friends'].split(",")
+		story_array_string = post[0]['story_array'].split(",")
 
-	conn.close()
+		recent_snap = []
+		for snap in recent_snaps:
+			recent_snap.append(snap)
+		freq_locs = []
+		for loc in recent_locs:
+			freq_locs.append(loc)
+		top3_snappers = []
+		for snapper in top3_snaps:
+			top3_snappers.append(snapper)
+		most_received_list = []
+		for received in most_received:
+			most_received_list.append(received)
+		media_types_list = []
+		for media in media_types:
+			media_types_list.append(media)
+		top10_text_list = []
+		for text in top10_text:
+			top10_text_list.append(text)
+		story_string_list = []
+		for string in story_string:
+			story_string_list.append(string)
 
-	with open('uploads/json/friends.json', encoding="utf8") as json_file:
-		friends = json.load(json_file)
-		min_array = []
-		for i in friends["Friends"]:
-			current = [int(i["Creation Timestamp"][0:4]), int(i["Creation Timestamp"][5:7]), int(i["Creation Timestamp"][8:10]), int(i["Creation Timestamp"][11:13]),  int(i["Creation Timestamp"][14:16]), int(i["Creation Timestamp"][17:19]), i["Username"], i["Display Name"]]
-			min_array.append(current)
+		breakdown_list = []
+		for breakdown in breakdown_string:
+			breakdown_list.append(breakdown)
+		engagement_list = []
+		for engagement in engagement_string:
+			engagement_list.append(engagement)
 
-		min_array = sorted(min_array)
-		first_friend = min_array[2]
-		min_array = min_array[3:7] # first two are you and teamsnap get other first 5 friends added
+		first_friend_name = first_friend[0]
+		first_friend_username = first_friend[1]
 
-	with open('uploads/json/story_history.json', encoding="utf8") as json_file:
-		story_hist = json.load(json_file)
-
-		viewer = {}
-		count = 0
-		for x in story_hist["Friend and Public Story Views"]:
-			for key, value in x.items():
-				if key == 'View':
-					viewer[value] = viewer.get(value, 0) + 1
+		first5_array = []
+		for friend in first5_friends:
+			first5_array.append(friend)
 
 		story_array = []
-		for k, v in sorted(viewer.items(), key=lambda x: x[1], reverse=True):
-			if k != '' and k != 'no name':
-				count += 1
-				story_array.append(f"@{k}'s story {v} times")
-			if count == 5:
-				break
-			
-	return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, 
-	most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend= first_friend, 
-	first5_friends=min_array, story_string_list=story_string_list, story_array=story_array, breakdown_list=breakdown_list,
-	engagement_list=engagement_list, data=media_dict)
+		for friend in story_array_string:
+			story_array.append(friend)
+
+		conn.close()
+
+		return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, 
+		most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend_name= first_friend_name, 
+		first_friend_username= first_friend_username, first5_friends=first5_array, story_string_list=story_string_list, story_array=story_array, 
+		breakdown_list=breakdown_list, engagement_list=engagement_list, data=media_dict)
+	except:
+		error = "Sorry! We couldn't find your zip file please upload a new one"
+		return render_template('site.html', error=error)
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))

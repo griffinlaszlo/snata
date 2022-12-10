@@ -42,6 +42,16 @@
 				</div>
 			</form>
 		</div>
+		<div>
+			<h1>Already have an old zip file with us?</h1>
+			<h2>Use this to view previously uploaded data</h2>
+			<form action="{{ url_for('query') }}">
+				<button class="button-27" type="submit" role="button">SHOW PREVIOUS DATA</button>
+			</form>
+		</div>
+		{% if error %}  
+        	<h2 class="error"><strong>Error</strong>: {{error}}</h2> 
+    	{% endif %}
 
 	</body>
 

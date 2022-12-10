@@ -19,6 +19,10 @@ h3 {
 
 }
 
+.error {
+  color: black;
+}
+
 .input {
   text-align: center;
 	margin: auto;
