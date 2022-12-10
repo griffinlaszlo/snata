@@ -391,6 +391,14 @@ def query():
 	top3_snaps = post[0]['top3_snappers'].split(",")
 	most_received = post[0]['most_received'].split(",")
 	media_types = post[0]['media_types'].split(",")
+	print(media_types)
+	media_dict = {}
+	media_dict['Media Type'] = 'Amount Sent'
+	for media in media_types:
+		if ':' in media:
+			split = media.split(":")
+			media_dict[split[0].strip()] = int(split[1])
+	print(media_dict)
 	top10_text = post[0]['top10_text'].split(",")
 	story_string = post[0]['story_string'].split(",")
 	breakdown_string = post[0]['breakdown'].split(",")
@@ -460,7 +468,7 @@ def query():
 	return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, 
 	most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend= first_friend, 
 	first5_friends=min_array, story_string_list=story_string_list, story_array=story_array, breakdown_list=breakdown_list,
-	engagement_list=engagement_list)
+	engagement_list=engagement_list, data=media_dict)
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
