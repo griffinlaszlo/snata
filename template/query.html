@@ -31,24 +31,48 @@
     </script>
 </head>
 <body>
+    <h1>SNATA</h1>
     <div class="container">
         <div class='post'>  
             <section>
                 <div class="image">
+                    <br>
                     <!-- eyes emoji -->
-                <h2>👋 Hello <b>{{ post[0]['snap_username'] }}</b> 👋<br>👀 Let's take a peek at your data! 👀</h2>
-                </div>
-            </section>
-
-            <section>
-                <div class="image">
-                <h2>Take a 👀 🔙 to when you <b>created your account</b>...</h2>
+                <h2>👋 <b>Hello {{ post[0]['snap_username'] }}</b> 👋
+                    <br>
+                    <br>
+                    <br>
+                <h2><b>Take a 👀 🔙 to when you created your account</b>...</h2>
                 <h2>{{ post[0]['creation_time'] }}</h2>
-                </div>
+                <br>
+                <br>
+                <h2><b>Just so you know...</b></h2>
+                <h2>You have sent a total of <b>{{ post[0]['total_snaps_sent'] }}</b> snaps</h2>
+                <h2>You have received a total of <b>{{ post[0]['total_snaps_received'] }} </b> snaps</h2>
+                <h2>You have saved a total of <b>{{ post[0]['total_snaps_saved'] }}</b> snaps</h2>
+                <h2> Your ratio from sent to received is <b>{{ post[0]['total_snaps_sent']/post[0]['total_snaps_received'] }}</b></h2>
+    
+                <br>
+                <br>
+                <br>    
+                <br>
+                <br>   
+                <h2>This is gonna be <b>fun...</b></h2>
+                <h2><b>Keep scrolling</b> to find out more!</h2>
+            </div>
             </section>
 
             <section>
                 <div class="image">
+                    <br>
+                    <br>
+                    <br>    
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>   
                 <h2>According to us, you were recently in</h2>
                 <h2><b>{{ post[0]['recent_location'] }}📍</b></h2>
                 <h2>and can frequently be found in</h2>
@@ -57,60 +81,59 @@
                 </div>
             </section>
 
-            <section>
+            <!-- <section>
                 <div class="image">
-                <h2>Do you remember when you added <b>{{ first_friend_name }} {{ first_friend_username }}</b>?</h2>
+                <h2>Do you remember when you added <br><b>{{ first_friend_name }} @{{ first_friend_username }}</b>?</h2>
+                <br>
                 <h2>They were the <b>first</b> friend you added friend!</h2>
+                <br>
+                <br>
                 </div>
-            </section>
-
-            <section>
-                <div class="image">
                 <h2>After <b>{{ first_friend_name }}</b>, <br>
                     the <b>next</b> additions to your network were...</h2>
                 {% for friend in first5_friends %}
                     <h2>@{{ friend }}</h2>
                 {% endfor %}
+                <br>
+                <br>
+                <br>
+                <h2>Find anything <b>interesting?</b></h2> -->
+            </section>
+
+
+            <section>
+                <br>
+                <br>
+                <br>    
+                <br>
+                <br>
+                <br>
+
+                <h2>Let's <b>breakdown</b> the <b>time you spend</b> on Snapchat...</h2>
+                {% for breakdown in breakdown_list[1:] %}
+                    <h2>{{ breakdown }}</h2>
+                {% endfor %}
+
+                <br>
+                <br>
+                <br>
+                <h2>Is this what you were <b>expecting</b>?</h2>
+            </section>
+
+            <section>
+                <br>
+                <br>
+                <div class="image">
+                    <h2> Let's <b>breakdown</b> how much you communicate on Snapchat...</h2> 
+                    <div class="image" id="piechart_3d" style="width: 900px; height: 500px; background-color: #FFFC33; margin: 0 auto;"></div>
+                    <h2>By the way, we may have taken a peak into your <b>saved chats</b>...</h2>
                 </div>
             </section>
 
             <section>
                 <div class="image">
-                {% for story_string in story_string_list %}
-                    <h2>
-                        {{ story_string }}
-                    </h2>
-                {% endfor %}
-                <h2>Keep telling <b>your story!</b></h2>
-                </div>
-            </section>
-
-
-            <section>
-                <div class="image">
-                <h2>It looks like you are inspired by those who <b>create</b>...</h2>
-                <h2>Here are your favorite creators from the <b>Discovery Page</b>!</h2>
-                <h2>You've viewed...</h2>
-                {% for story in story_array %}
-                    <h2>{{ story }}</h2>
-                {% endfor %}
-                </div>
-            </section>
-
-            <section>
-                <div class="image">
-                <h2>These are a few <b>stories</b> you enjoy the most...</h2>
-                {% for story in story_array %}
-                    <h2>
-                        {{ story }}
-                    </h2>
-                {% endfor %}
-                </div> 
-            </section>
-
-            <section>
-                <div class="image">
-                    <h2>Here are some of your top 10 sayings...</h2>
+                    <br>
+                    <h2>Here are your <b>top 10 sayings</b>...</h2>
                     <br>
                     {% for saying in top10_text %}
                         <h2>{{ saying }}</h2>
@@ -123,15 +146,10 @@
             </section>
 
             <section>
+                <br>
+                <br>
                 <div class="image">
-                    <h2> Let's <b>breakdown</b> how much you communicate on Snapchat...</h2> 
-                    <div class="image" id="piechart_3d" style="width: 900px; height: 500px; background-color: #FFFC33; margin: 0 auto;"></div>
-                </div>
-            </section>
-
-            <section>
-                <div class="image">
-                <h2> Here is who Snapchat's you the <b>most</b>...</h2> 
+                <h2> The ones who have Snapped you the <b>most</b>...</h2> 
                 <br>
                 {% for received in most_received %}
                     <h2>{{ received }}</h2>
@@ -142,12 +160,84 @@
             </section>
 
             <section>
-                <h2>Let's <b>breakdown</b> the <b>time you spend</b> on Snapchat...</h2>
-                {% for breakdown in breakdown_list[1:] %}
-                    <h2>{{ breakdown }}</h2>
+                <div class="image">
+                    <br>
+                    <br>
+                    <br>
+
+                <h2>Do you remember when you added <br><b>{{ first_friend_name }} @{{ first_friend_username }}</b>?</h2>
+                <br>
+                <h2>They were the <b>first</b> friend you added friend!</h2>
+                <br>
+                <br>
+                </div>
+                <h2>After <b>{{ first_friend_name }}</b>, <br>
+                    the <b>next</b> additions to your network were...</h2>
+                {% for friend in first5_friends %}
+                    <h2>@{{ friend }}</h2>
                 {% endfor %}
-                <h2>Is this what you were <b>expecting</b>?</h2>
+                <br>
+                <br>
+                <br>
+                <br>
+                <h2>Find anything <b>interesting?</b></h2>
             </section>
+<!--
+
+    
+            <section>
+                <div class="image">
+                <h2>After <b>{{ first_friend_name }}</b>, <br>
+                    the <b>next</b> additions to your network were...</h2>
+                {% for friend in first5_friends %}
+                    <h2>@{{ friend }}</h2>
+                {% endfor %}
+                </div>
+            </section> -->
+
+            <section>
+                <h2>You've demonstrated interest in <b>{{ post[0]['num_of_interests'] }}</b> different topics.</h2>
+                <h2>You have subscribed to a total of <b>{{ post[0]['total_subs'] }}</b> users!</h2>
+                <h2>The amount of stories you are subscribed to: <b>{{ post[0]['stories'] }}</b></h2>
+                <h2>The amount of publishers you are subscribed to: <b>{{ post[0]['publishers'] }}</b></h2>
+                <h2>The amount of public users you are subscribed to: <b>{{ post[0]['public_users'] }}</b></h2>
+            </section>
+
+            <section>
+                <div class="image">
+                {% for story_string in story_string_list %}
+                    <h2>
+                        {{ story_string }}
+                    </h2>
+                {% endfor %}
+                <h2>Keep telling <b>your story!</b></h2>
+                <br>
+                <br>
+                <br>
+                <h2>It looks like you are inspired by those who <b>create</b>...</h2>
+                <h2>Here are your favorite creators from the <b>Discovery Page</b>!</h2>
+                <h2>You've viewed...</h2>
+                {% for story in story_array %}
+                    <h2>{{ story }}</h2>
+                {% endfor %}
+                </div>
+            </section>
+
+
+            <!-- <section>
+                <div class="image">
+                <h2>It looks like you are inspired by those who <b>create</b>...</h2>
+                <h2>Here are your favorite creators from the <b>Discovery Page</b>!</h2>
+                <br>
+
+                <h2>You've viewed...</h2>
+                {% for story in story_array %}
+                    <h2>{{ story }}</h2>
+                {% endfor %}
+                </div>
+            </section> -->
+
+
 
             <section>
                 {% for engagement in engagement_list %}
@@ -156,7 +246,54 @@
             </section>
 
             <section>
-                <h2>You've demonstrated interest in <b>{{ post[0]['num_of_interests'] }}</b>> different topics.</h2>
+                <div class="image">
+                <!-- <h2>Thank you for <b>sharing</b> your <b>story</b> with us!</h2> -->
+                <p><b>{{ post[0]['snap_username'] }}</b>
+                    <br>
+                    <br>
+                    <br>
+                <p>You created your account on
+                <b>{{ post[0]['creation_time'] }}</b>.</p>
+                <p>You have sent a total of <b>{{ post[0]['total_snaps_sent'] }}</b> snaps</p>
+                <p>You have received a total of <b>{{ post[0]['total_snaps_received'] }} </b> snaps</p>
+                <p>You have saved a total of <b>{{ post[0]['total_snaps_saved'] }}</b> snaps</p>
+                <p> Your ratio from sent to received is <b>{{ post[0]['total_snaps_sent']/post[0]['total_snaps_received'] }}</b></p>
+                <p> Your ratio from received to sent is <b>{{ post[0]['total_snaps_received']/post[0]['total_snaps_sent'] }}</b></p>
+                <p>You were recently in <b>{{ post[0]['recent_location'] }}📍</b></p>
+                <p>You can frequently be found in <b>{{ freq_locs[0] }}</b></p>
+                <p>Your first frend added was <b>{{ first_friend_name }} @{{ first_friend_username }}</b></p>
+                <p>                {% for breakdown in breakdown_list[1:] %}
+                    <h2>{{ breakdown }}</h2>
+                {% endfor %}</p>
+                </div>
+
+            </section>
+            <section>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>    
+                <h2>This project was created by
+                    <br>
+                    <br>
+                    <a href="https://www.instagram.com/griffinlaszlo/?hl=en">Griffin Laszlo</a>
+                    <br>
+                    Jason Brammer<br>
+                    Daniel Shields<br>
+                    Noah Ho'tai<br>
+                    <br>
+                    <br>
+                    at the University of Notre Dame
+                    <br>
+                    for our Databases Concepts course.
+                    <br>
+                    Thank you, Prof. Weninger.
+            
+                    <br>
+                </h2>
             </section>
 
             <!-- <section>
@@ -169,22 +306,8 @@
                 <h2>{{ post[0]['name_changes'] }}</h2>
             </section> -->
 
-            <section>
-                <h2>You have subscribed to a total of <b>{{ post[0]['total_subs'] }}</b> users!</h2>
-                <h2>The amount of stories you are subscribed to: <b>{{ post[0]['stories'] }}</b></h2>
-                <h2>The amount of publishers you are subscribed to: <b>{{ post[0]['publishers'] }}</b></h2>
-                <h2>The amount of public users you are subscribed to: <b>{{ post[0]['public_users'] }}</b></h2>
-            </section>
-
-            <section>
-                <h2>You have sent a total of <b>{{ post[0]['total_snaps_sent'] }}</b> snaps</h2>
-                <h2>You have received a total of <b>{{ post[0]['total_snaps_received'] }}</b> snaps</h2>
-                <h2>You have saved a total of <b>{{ post[0]['total_snaps_saved'] }}</b> snaps</h2>
-            </section>
 
         </div>
     </div>
-
-</body>
 
 </html>

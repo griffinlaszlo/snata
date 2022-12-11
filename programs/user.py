@@ -12,7 +12,7 @@ FILE = open('user_profile.json')
 file = json.load(FILE)
 months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 for key, value in file.items():
-    print(key)
+    # print(key)
     if key == 'App Profile':
         for key, value in value.items():
             if key == 'Creation Time':
@@ -31,54 +31,64 @@ for key, value in file.items():
                         month_num = months.index(n) + 1
                         break
                 second = second.split(' ')[0]
-                print('It has been ' + str(int(time.strftime('%Y')) - int(year)) + ' years, ' + str(int(time.strftime('%m')) - int(month_num)) + ' months, ' + str(-1*(int(time.strftime('%d')) - int(day))) + ' days, ' + str(int(time.strftime('%H')) - int(hour)) + ' hours, ' + str(1*(int(time.strftime('%M')) - int(minute))) + ' minutes, and ' + str(-1*(int(time.strftime('%S')) - int(second))) + ' seconds since you created your account.')             
+                print('It has been ' + str(int(time.strftime('%Y')) - int(year)) + ' years, ' + str(int(time.strftime('%m')) - int(month_num)) + ' months and ' + str(-1*(int(time.strftime('%d')) - int(day))) + ' days' + ' since you created your account.')             
 
     
 
     if key == 'Engagement':
-        # search through list
-        print('In the last month or two, you...')
         for n in value:
             event = n["Event"]
             occurrences = n["Occurrences"]
-            print(n)
-            print(event)
-            print(occurrences)            
             if event == 'Application Opens':
-                text = '...have opened the app ' + str(occurrences) + ' times.'
+                print('In the last month or two, you have...\n...opened the app ' + str(occurrences) + ' times')
+
+            if event == 'Story Views':
+                print('...viewed ' + str(occurrences) + ' Discover Stories.')
+
+            if event == 'Snaps Posted to Story':
+                print('...posted ' + str(occurrences) + ' Snaps to your Story.')
+
+            if event == 'Snaps Viewed in a Story':
+                print('...viewed ' + str(occurrences) + ' Snaps in a Story.')
+
+            if event == 'Snaps Views':
+                print('...viewed ' + str(occurrences) + ' Snaps.')
+            
+            if event == 'Snaps Sends':
+                print('...sent ' + str(occurrences) + ' Snaps.')
+
+            if event == 'Chats Sent':
+                print('...sent ' + str(occurrences) + ' Chats.')
+
+            if event == 'Chats Viewed':
+                print('...viewed ' + str(occurrences) + ' Chats.')
+
+            if event == 'Discover Editions Viewed':
+                print('...viewed ' + str(occurrences) + ' Discover Editions.')
+            
             if event == 'Discover Snap Views':
-                text = '...have viewed ' + str(occurrences) + ' Discover Snaps.'
-                print(text)
-            else:
-                break
-    '''
-            if event == 'Discover Stories Views':
-                text = '...have viewed ' + str(occurrences) + ' Discover Stories.'
-            if event == 'Discover Stories Swipes':
-                text = '...have swiped ' + str(occurrences) + ' Discover Stories.'
-            if event == 'Discover Stories Taps':
-                text = '...have tapped ' + str(occurrences) + ' Discover Stories.'
-            if event == 'Discover Stories Long Presses':
-                text = '...have long pressed ' + str(occurrences) + ' Discover Stories.'
-            if event == 'Discover Stories Saves':
-                text = '...have saved ' + str(occurrences) + ' Discover Stories.'
-            elif event == 'Discover Stories Shares':
-                text = '...have shared ' + str(occurrences) + ' Discover Stories.'
-            elif event == 'Discover Stories Replies':
-                text = '...have replied to ' + str(occurrences) + ' Discover Stories.'
-            elif event == 'Discover Stories Screenshots':
-                text = '...have screenshot ' + str(occurrences) + ' Discover Stories.'
-            elif event == 'Discover Stories Mutes':
-                text = '...have muted ' + str(occurrences) + ' Discover Stories.'
-            elif event == 'Discover Stories Unmutes':
-                text = '...have unmuted ' + str(occurrences) + ' Discover Stories.'
-            elif event == 'Discover Stories Opens':
-                text = '...have opened ' + str(occurrences) + ' Discover Stories.'
-            print(text)
+                print('...viewed ' + str(occurrences) + ' Discover Snaps.')
+            
+            if event == 'Direct Snaps Created':
+                print('...created ' + str(occurrences) + ' Direct Snaps.')
+            
+            if event == 'Direct Snaps Viewed':
+                print('...viewed ' + str(occurrences) + ' Direct Snaps.')
 
-            # if event = Application Opens, print value
+            if event == 'Geofilter Snap Sends':
+                print('...sent ' + str(occurrences) + ' Geofilter Snaps.')
+            
+            if event == 'Geofilter Story Snaps Viewed':
+                print('...viewed ' + str(occurrences) + ' Geofilter Story Snaps.')
+            
+            if event == 'Geolens Swipes':
+                print('...swiped ' + str(occurrences) + ' Geolens Snaps.')
+            
+            if event == 'Geofilter Snaps Posted to Story':
+                print('...posted ' + str(occurrences) + ' Geofilter Snaps to your Story.')
 
-                #print('opened the application ' + str(n["Value"]) + ' times')
-                   # print(f'{key}: {value}')         
+            if event == 'Geofilter Swipes':
+                print('...swiped ' + str(occurrences) + ' Geofilter Snaps.')
+            
 
-'''
+
