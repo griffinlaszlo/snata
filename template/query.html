@@ -240,9 +240,30 @@
 
 
             <section>
-                {% for engagement in engagement_list %}
-                    <h2>{{ engagement }}</h2>
-                {% endfor %}
+                <h1>In the last month or two, you have...</h1>
+                <div class="row">
+                    <div class="column">
+                        <h2>...opened the app <b>{{ post[0]['opened_app'] }}</b> times</h2>
+                        <h2>...viewed <b>{{ post[0]['discover_stories'] }}</b> Discover Stories</h2>
+                        <h2>...posted <b>{{ post[0]['snaps_to_story'] }}</b> Snaps to your Story</h2>
+                        <h2>...viewed a total of <b>{{ post[0]['total_snaps_viewed'] }}</b> Snaps in a Story</h2>
+                        <h2>...viewed <b>{{ post[0]['snaps_viewed'] }}</b> Snaps</h2>
+                        <h2>...sent <b>{{ post[0]['snaps_sent'] }}</b> Snaps</h2>
+                        <h2>...viewed <b>{{ post[0]['chats_viewed'] }}</b> Chats</h2>
+                        <h2>...sent <b>{{ post[0]['chats_sent'] }}</b> Chats</h2>
+                    </div>
+                    <div class="column">
+                        <h2>...viewed <b>{{ post[0]['discover_editions'] }}</b> Discover Editions</h2>
+                        <h2>...viewed <b>{{ post[0]['discover_snaps'] }}</b> Discover Snaps</h2>
+                        <h2>...created <b>{{ post[0]['direct_snaps_created'] }}</b> Direct Snaps</h2>
+                        <h2>...viewed <b>{{ post[0]['direct_snaps_viewed'] }}</b> Direct Snaps</h2>
+                        <h2>...sent <b>{{ post[0]['geofilter_snaps'] }}</b> Geofilter Snaps</h2>
+                        <h2>...viewed <b>{{ post[0]['geofilter_story'] }}</b> Geofilter Story Snaps</h2>
+                        <h2>...swiped <b>{{ post[0]['geolens_snaps'] }}</b> Geolens Snaps</h2>
+                        <h2>...posted <b>{{ post[0]['geofilter_used'] }}</b> Geofilter Snaps to your Story</h2>
+                        <h2>...swiped <b>{{ post[0]['geofilter_swipes'] }}</b> Geofilter Snaps</h2>
+                    </div>
+                </div>
             </section>
 
             <section>

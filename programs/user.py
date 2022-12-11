@@ -51,10 +51,10 @@ for key, value in file.items():
             if event == 'Snaps Viewed in a Story':
                 print('...viewed ' + str(occurrences) + ' Snaps in a Story.')
 
-            if event == 'Snaps Views':
+            if event == 'Snap Views':
                 print('...viewed ' + str(occurrences) + ' Snaps.')
             
-            if event == 'Snaps Sends':
+            if event == 'Snap Sends':
                 print('...sent ' + str(occurrences) + ' Snaps.')
 
             if event == 'Chats Sent':
