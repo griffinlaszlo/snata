@@ -9,14 +9,14 @@
    <body>
     <br>
     <br>
-     <br>
-     <br>
-     <br>
+    <br>
+    <br>
+
+
+    <div class="form-contatiner">
      <h1>
         SNATA
     </h1>
-    <div class="form-contatiner">
-       <br>
         <form method="POST" action="">
             {{ form.hidden_tag() }}
 
@@ -31,7 +31,7 @@
                 {{ form.submit }}
                </li>
                <li>
-                <a href="{{url_for('login')}}">Login</a>
+                <a style="color:white" href="{{url_for('login')}}">Login</a>
                </li>
               
            </ul>

@@ -8,24 +8,22 @@
 	</head>
 	<body>
 		<div>
-			<form action="{{url_for('logout')}}" target="_blank">
+			<form action="{{url_for('logout')}}">
 				<button class="button-28" type="submit" role="button">LOG OUT</button>
 			</form>
 		</div>
-		<!-- 5 </br>s -->
 		<br>
 		<br>
 		<br>
 		<br>
 		<br>
-		
-		<h1>
+		<h1 style="font-family: 'Avenir Next'; text-align: center; font-size: 3em;">
 			SNATA
 		</h1>
 		<div class="image">
 			<h3>For detailed instructions on how to
 			log in and request <br> your data from Snapchat,
-			 click <a href="{{ url_for('instructions') }}">here</a>
+			 click <a href="{{ url_for('instructions') }}">here</a>.
 			</h3>
 		</div>
 		<h3> 
@@ -36,22 +34,50 @@
 				<input name='data_zip_file' type="file" accept=".zip"/>
 				<div>
 					<br>
-					<form action="{{ url_for('query') }}">
-						<button class="button-27" type="submit" role="button">SHOW DATA</button>
+					<form action="{{ url_for('loading') }}">
+						<button id="byebutton" class="button-27" onclick="move()" type="submit" role="button">SHOW DATA</button>
+
+						<div id="load" class="w3-container" style="display:none; width:50%; margin: auto;">
+							<div class="w3-light-grey">
+							  <div id="myBar" class="w3-container w3-black w3-center" style="width:0%">0%</div>
+						</div>
 					</form>
 				</div>
 			</form>
 		</div>
 		<div>
-			<h1>Already have an old zip file with us?</h1>
-			<h2>Use this to view previously uploaded data</h2>
 			<form action="{{ url_for('query') }}">
-				<button class="button-27" type="submit" role="button">SHOW PREVIOUS DATA</button>
+				<h3>Already have an old zip file with us?
+					<br> To the data you've previously updated,
+					click the button below.
+					<br>
+					<button class="button-27" type="submit" role="button">PREVIOUS DATA</button>
+				   </h3>
 			</form>
 		</div>
 		{% if error %}  
         	<h2 class="error"><strong>Error</strong>: {{error}}</h2> 
     	{% endif %}
+
+
+	<script>
+		function move() {
+			document.getElementById('byebutton').style.display = "none";
+			document.getElementById('load').style.display = "block";
+			var elem = document.getElementById("myBar");   
+			var width = 0;
+			var id = setInterval(frame, 80);
+			function frame() {
+			if (width >= 100) {
+				clearInterval(id);
+			} else {
+				width++; 
+				elem.style.width = width + '%'; 
+				elem.innerHTML = width * 1  + '%';
+			}
+			}
+		}
+		</script>
 
 	</body>
 
