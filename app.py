@@ -375,7 +375,7 @@ def site():
 						for k, v in sorted(text.items(), key=lambda x: x[1], reverse=True):
 							if k != '':
 								count += 1
-								top10_text = top10_text + k + ": " + str(v) + ", "
+								top10_text = top10_text + k + ": " + str(v) + "; "
 							if count == 10:
 								break
 			with open('uploads/json/account.json', encoding="utf8") as json_file:
@@ -591,7 +591,7 @@ def query():
 			if ':' in media:
 				split = media.split(":")
 				media_dict[split[0].strip()] = int(split[1])
-		top10_text = post[0]['top10_text'].split(",")
+		top10_text = post[0]['top10_text'].split(";")
 		story_string = post[0]['story_string'].split(",")
 		breakdown_string = post[0]['breakdown'].split(",")
 		engagement_string = post[0]['engagement'].split(",")
