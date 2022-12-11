@@ -421,10 +421,20 @@ def site():
 			#db.session.add(chat_history)
 			#db.session.add(location)
 			db.session.commit()
-
 			return redirect(url_for('query'))
 
 	return render_template('site.html')
+
+
+@app.route('/loading', methods=['GET', 'POST'])
+@login_required
+def loading():
+	if request.method == "POST":
+		return redirect(url_for('query'))
+
+	return render_template('loading.html')
+
+
 
 @app.route('/query', methods=['GET', 'POST'])
 @login_required
