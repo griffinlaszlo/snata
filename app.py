@@ -343,7 +343,7 @@ def site():
 
 				min_array = sorted(min_array)
 				first_friend = min_array[2]
-				first_friend = first_friend[7] + " " + first_friend[6]
+				first_friend = first_friend[7] + "," + first_friend[6]
 				min_array = min_array[3:7] # first two are you and teamsnap get other first 5 friends added
 				first_friend_string = ""
 				for friend in min_array:
@@ -460,7 +460,7 @@ def query():
 		breakdown_string = post[0]['breakdown'].split(",")
 		engagement_string = post[0]['engagement'].split(",")
 
-		first_friend = post[0]['first_friend'].split(" ")
+		first_friend = post[0]['first_friend'].split(",")
 		first5_friends = post[0]['first5_friends'].split(",")
 		story_array_string = post[0]['story_array'].split(",")
 
