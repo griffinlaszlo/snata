@@ -93,6 +93,26 @@ class Chats(db.Model):
 	total_snaps_received = db.Column(db.Integer())
 	total_snaps_saved = db.Column(db.Integer())
 
+class Engagement(db.Model):
+	users_id = db.Column(db.Integer, db.ForeignKey(Users.id), nullable=False, primary_key=True)
+	opened_app = db.Column(db.Integer)
+	discover_stories = db.Column(db.Integer)
+	snaps_to_story = db.Column(db.Integer)
+	total_snaps_viewed = db.Column(db.Integer)
+	snaps_sent = db.Column(db.Integer)
+	snaps_viewed = db.Column(db.Integer)
+	chats_sent = db.Column(db.Integer)
+	chats_viewed = db.Column(db.Integer)
+	discover_editions = db.Column(db.Integer)
+	discover_snaps = db.Column(db.Integer)
+	direct_snaps_viewed = db.Column(db.Integer)
+	direct_snaps_created = db.Column(db.Integer)
+	geofilter_snaps = db.Column(db.Integer)
+	geofilter_story = db.Column(db.Integer)
+	geolens_snaps = db.Column(db.Integer)
+	geofilter_used = db.Column(db.Integer)
+	geofilter_swipes = db.Column(db.Integer)
+
 # class Location(db.Model):
 # 	id = db.Column(db.Integer, unique=True, primary_key=True)
 # 	username = db.Column(db.String(20), unique=True, nullable=False)
@@ -154,6 +174,62 @@ def site():
 									second += ' AM'
 								month = months[int(month) - 1]
 								ct = month + " " + day + ", " + year + " at exactly " + hour + ":" + minute + ":" + second
+
+					if (key == 'Engagement'):
+						for n in value:
+							event = n["Event"]
+							occurrences = n["Occurrences"]
+							if event == 'Application Opens':
+								opened_app = occurrences
+            				    #print('In the last month or two, you have...\n...opened the app ' + str(occurrences) + ' times')
+							if event == 'Story Views':
+								discover_stories = occurrences
+            				    #print('...viewed ' + str(occurrences) + ' Discover Stories.')
+							if event == 'Snaps Posted to Story':
+								snaps_to_story = occurrences
+            				    #print('...posted ' + str(occurrences) + ' Snaps to your Story.')
+							if event == 'Snaps Viewed in a Story':
+								total_snaps_viewed = occurrences
+            				    #print('...viewed ' + str(occurrences) + ' Snaps in a Story.')
+							if event == 'Snap Views':
+								snaps_viewed = occurrences
+            				    #print('...viewed ' + str(occurrences) + ' Snaps.')
+							if event == 'Snap Sends':
+								snaps_sent = occurrences
+            				    #print('...sent ' + str(occurrences) + ' Snaps.')
+							if event == 'Chats Sent':
+								chats_sent = occurrences
+            				    #print('...sent ' + str(occurrences) + ' Chats.')
+							if event == 'Chats Viewed':
+								chats_viewed = occurrences
+            				    #print('...viewed ' + str(occurrences) + ' Chats.')
+							if event == 'Discover Editions Viewed':
+								discover_editions = occurrences
+            				    #print('...viewed ' + str(occurrences) + ' Discover Editions.')
+							if event == 'Discover Snap Views':
+								discover_snaps = occurrences
+            				    #print('...viewed ' + str(occurrences) + ' Discover Snaps.')
+							if event == 'Direct Snaps Created':
+								direct_snaps_created = occurrences
+            				    #print('...created ' + str(occurrences) + ' Direct Snaps.')
+							if event == 'Direct Snaps Viewed':
+								direct_snaps_viewed = occurrences
+            				    #print('...viewed ' + str(occurrences) + ' Direct Snaps.')
+							if event == 'Geofilter Snap Sends':
+								geofilter_snaps = occurrences
+            				    #print('...sent ' + str(occurrences) + ' Geofilter Snaps.')
+							if event == 'Geofilter Story Snaps Viewed':
+								geofilter_story = occurrences
+            				    #print('...viewed ' + str(occurrences) + ' Geofilter Story Snaps.')
+							if event == 'Geolens Swipes':
+								geolens_snaps = occurrences
+            				    #print('...swiped ' + str(occurrences) + ' Geolens Snaps.')
+							if event == 'Geofilter Snaps Posted to Story':
+								geofilter_used = occurrences
+            				    #print('...posted ' + str(occurrences) + ' Geofilter Snaps to your Story.')
+							if event == 'Geofilter Swipes':
+								geofilter_swipes = occurrences
+            				    #print('...swiped ' + str(occurrences) + ' Geofilter Snaps.')
 
 				def user_profile_info(file):
 					
@@ -421,19 +497,65 @@ def site():
 			user.first5_friends = first_friend_string
 			user.story_array = story_array_string
 
-			chats = Chats(
-				user_id = user.id,
-				recent_snap = recent_snap_string,
-				top3_snappers = top3_string,
-				most_received = most_received,
-				total_snaps_sent = total_snaps_sent,
-				total_snaps_received = total_snaps_received,
-				total_snaps_saved = total_snaps_saved
-			)
+			try:
+				chats = Chats.query.filter_by(user_id=user.id).first()
+				chats.recent_snap = recent_snap_string
+				chats.top3_snappers = top3_string
+				chats.most_received = most_received
+				chats.total_snaps_sent = total_snaps_sent
+				chats.total_snaps_received = total_snaps_received
+				chats.total_snaps_saved = total_snaps_saved
+			except:
+				chats = Chats(
+					user_id = user.id,
+					recent_snap = recent_snap_string,
+					top3_snappers = top3_string,
+					most_received = most_received,
+					total_snaps_sent = total_snaps_sent,
+					total_snaps_received = total_snaps_received,
+					total_snaps_saved = total_snaps_saved
+				)
+
+			try:
+				engagement_table = Engagement.query.filter_by(users_id=user.id).first()
+				engagement_table.opened_app = opened_app
+				engagement_table.discover_stories = discover_stories
+				engagement_table.snaps_to_story = snaps_to_story
+				engagement_table.total_snaps_viewed = total_snaps_viewed
+				engagement_table.chats_sent = chats_sent
+				engagement_table.chats_viewed = chats_viewed
+				engagement_table.discover_editions = discover_editions
+				engagement_table.discover_snaps = discover_snaps
+				engagement_table.direct_snaps_viewed = direct_snaps_viewed
+				engagement_table.direct_snaps_created = direct_snaps_created
+				engagement_table.geofilter_snaps = geofilter_snaps
+				engagement_table.geofilter_story = geofilter_story
+				engagement_table.geolens_snaps = geofilter_snaps
+				engagement_table.geofilter_used = geofilter_used
+				engagement_table.geofilter_swipes = geofilter_swipes
+			except:
+				engagement_table = Engagement(
+					users_id = user.id,
+					opened_app = opened_app,
+					discover_stories = discover_stories,
+					snaps_to_story = snaps_to_story,
+					total_snaps_viewed = total_snaps_viewed,
+					chats_sent = chats_sent,
+					chats_viewed = chats_viewed,
+					discover_editions = discover_editions,
+					discover_snaps = discover_snaps,
+					direct_snaps_viewed = direct_snaps_viewed,
+					direct_snaps_created = direct_snaps_created,
+					geofilter_snaps = geofilter_snaps,
+					geofilter_story = geofilter_story,
+					geolens_snaps = geofilter_snaps,
+					geofilter_used = geofilter_used,
+					geofilter_swipes = geofilter_swipes
+				)
 
 			db.session.add(user)
 			db.session.add(chats)
-			#db.session.add(location)
+			db.session.add(engagement_table)
 			db.session.commit()
 			return redirect(url_for('query'))
 
@@ -457,7 +579,7 @@ def query():
 	try:
 		conn = get_db_connection()
 		cursor = conn.cursor()
-		post = cursor.execute(f'SELECT * FROM Users JOIN Chats ON Users.id=Chats.user_id WHERE username = "{current_user.username}"').fetchall()
+		post = cursor.execute(f'SELECT * FROM Users JOIN Chats ON Users.id=Chats.user_id JOIN Engagement ON Chats.user_id=Engagement.users_id WHERE username = "{current_user.username}"').fetchall()
 		recent_snaps = post[0]['recent_snap'].split(",")
 		recent_locs = post[0]['frequent_locations'].split(";")
 		top3_snaps = post[0]['top3_snappers'].split(",")
@@ -549,6 +671,10 @@ def instructions():
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+	conn = get_db_connection()
+	cursor = conn.cursor()
+	post = cursor.execute(f'SELECT count(*) as cnt FROM Users').fetchall()
+	conn.close()
 	form = LoginForm()
 	if form.validate_on_submit():
 		user = Users.query.filter_by(username=form.username.data).first()
@@ -557,7 +683,7 @@ def login():
 			return redirect(url_for('site'))
 		else:
 			flash('Username or password incorrect.', 'danger')
-	return render_template('login.html', form=form)
+	return render_template('login.html', form=form, post=post[0]['cnt'])
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():

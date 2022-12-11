@@ -82,6 +82,18 @@ h3 {
   color: #000000;
 }
 
+.column {
+  float: left;
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 .image {
   text-align: center;
   margin-top: 20px;
