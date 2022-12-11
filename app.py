@@ -50,10 +50,12 @@ class Users(db.Model, UserMixin):
 	creation_time = db.Column(db.String(50))
 	recent_location = db.Column(db.String(50))
 	frequent_locations = db.Column(db.Text())
-	recent_snap = db.Column(db.String(50))
-	top3_snappers = db.Column(db.String(100))
-	most_received = db.Column(db.Text())
+
+	# recent_snap = db.Column(db.String(50))
+	# top3_snappers = db.Column(db.String(100))
+	# most_received = db.Column(db.Text())
 	# most_sent = db.Column(db.Text())
+
 	media_types = db.Column(db.Text())
 	top10_text = db.Column(db.Text())
 	story_string = db.Column(db.Text())
@@ -69,19 +71,27 @@ class Users(db.Model, UserMixin):
 	stories = db.Column(db.Integer())
 	publishers = db.Column(db.Integer())
 	public_users = db.Column(db.Integer())
-	total_snaps_sent = db.Column(db.Integer())
-	total_snaps_received = db.Column(db.Integer())
-	total_snaps_saved = db.Column(db.Integer())
+
+	# total_snaps_sent = db.Column(db.Integer())
+	# total_snaps_received = db.Column(db.Integer())
+	# total_snaps_saved = db.Column(db.Integer())
 
 	first_friend = db.Column(db.Text())
 	first5_friends = db.Column(db.Text())
 	story_array = db.Column(db.Text())
-
-	
 	#data = db.Column(db.LargeBinary) -- data=file.read()
 
 	def __repr__(self):
 		return f'ID : {self.id}, Name : {self.username}'
+
+class Chats(db.Model):
+	user_id = db.Column(db.Integer, db.ForeignKey(Users.id), nullable=False, primary_key=True)
+	recent_snap = db.Column(db.String(50))
+	top3_snappers = db.Column(db.String(100))
+	most_received = db.Column(db.Text())
+	total_snaps_sent = db.Column(db.Integer())
+	total_snaps_received = db.Column(db.Integer())
+	total_snaps_saved = db.Column(db.Integer())
 
 # class Location(db.Model):
 # 	id = db.Column(db.Integer, unique=True, primary_key=True)
@@ -380,9 +390,11 @@ def site():
 			user.creation_time = ct
 			user.recent_location = recent_location
 			user.frequent_locations=freq_loc_string
-			user.recent_snap=recent_snap_string
-			user.top3_snappers=top3_string
-			user.most_received=most_received 
+
+			# user.recent_snap=recent_snap_string
+			# user.top3_snappers=top3_string
+			# user.most_received=most_received 
+
 			user.media_types=media_types
 			user.top10_text=top10_text
 			user.story_string=story_string
@@ -401,24 +413,26 @@ def site():
 			user.publishers = publishers
 			user.public_users = public_users
 
-			user.total_snaps_sent = total_snaps_sent
-			user.total_snaps_received = total_snaps_received
-			user.total_snaps_saved = total_snaps_saved
+			# user.total_snaps_sent = total_snaps_sent
+			# user.total_snaps_received = total_snaps_received
+			# user.total_snaps_saved = total_snaps_saved
 
 			user.first_friend = first_friend
 			user.first5_friends = first_friend_string
 			user.story_array = story_array_string
 
-			# # user = Users(username=db_username, password="password", snap_username=snap_username, snap_email="dshield2@nd.edu", snap_phone=snap_phone, filename=file.filename, creation_time=ct, 
-			# 	recent_location=recent_location, frequent_locations=freq_loc_string, recent_snap=recent_snap_string, top3_snappers=top3_string, most_received=most_received, 
-			# 	media_types=media_types, top10_text=top10_text, story_string=story_string)
-
-			# with open('uploads/json/location_history.json', encoding="utf8") as json_file:
-			# 	loc = json.load(json_file)
-			# location = Location(username=db_username, filename="location_history.json", data=loc)
+			chats = Chats(
+				user_id = user.id,
+				recent_snap = recent_snap_string,
+				top3_snappers = top3_string,
+				most_received = most_received,
+				total_snaps_sent = total_snaps_sent,
+				total_snaps_received = total_snaps_received,
+				total_snaps_saved = total_snaps_saved
+			)
 
 			db.session.add(user)
-			#db.session.add(chat_history)
+			db.session.add(chats)
 			#db.session.add(location)
 			db.session.commit()
 			return redirect(url_for('query'))
@@ -443,7 +457,7 @@ def query():
 	try:
 		conn = get_db_connection()
 		cursor = conn.cursor()
-		post = cursor.execute(f'SELECT * FROM Users WHERE username = "{current_user.username}"').fetchall()
+		post = cursor.execute(f'SELECT * FROM Users JOIN Chats ON Users.id=Chats.user_id WHERE username = "{current_user.username}"').fetchall()
 		recent_snaps = post[0]['recent_snap'].split(",")
 		recent_locs = post[0]['frequent_locations'].split(";")
 		top3_snaps = post[0]['top3_snappers'].split(",")
