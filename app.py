@@ -92,6 +92,8 @@ class Chats(db.Model):
 	total_snaps_sent = db.Column(db.Integer())
 	total_snaps_received = db.Column(db.Integer())
 	total_snaps_saved = db.Column(db.Integer())
+	sent_received_ratio = db.Column(db.Integer())
+	received_sent_ratio = db.Column(db.Integer())
 
 class Engagement(db.Model):
 	users_id = db.Column(db.Integer, db.ForeignKey(Users.id), nullable=False, primary_key=True)
@@ -343,10 +345,12 @@ def site():
 					snaps_sent_unsaved = len(file["Sent Unsaved Chat History"])
 					total_snaps_sent = snaps_sent_unsaved + snaps_sent_saved
 					total_snaps_saved = snaps_received_saved + snaps_sent_saved
+					sent_received_ratio = round((total_snaps_sent/total_snaps_received) * 100, 2)
+					received_sent_ratio = round((total_snaps_received/total_snaps_sent) * 100, 2)
 
-					return total_snaps_sent, total_snaps_received, total_snaps_saved
+					return total_snaps_sent, total_snaps_received, total_snaps_saved, sent_received_ratio, received_sent_ratio
 
-				total_snaps_sent, total_snaps_received, total_snaps_saved = total_snaps(chat_history)	
+				total_snaps_sent, total_snaps_received, total_snaps_saved, sent_received_ratio, received_sent_ratio = total_snaps(chat_history)	
 
 				for key, value in chat_history.items():
 					if key == 'Received Saved Chat History':
@@ -505,6 +509,8 @@ def site():
 				chats.total_snaps_sent = total_snaps_sent
 				chats.total_snaps_received = total_snaps_received
 				chats.total_snaps_saved = total_snaps_saved
+				chats.sent_received_ratio = sent_received_ratio
+				chats.received_sent_ratio = received_sent_ratio
 			except:
 				chats = Chats(
 					user_id = user.id,
@@ -513,7 +519,9 @@ def site():
 					most_received = most_received,
 					total_snaps_sent = total_snaps_sent,
 					total_snaps_received = total_snaps_received,
-					total_snaps_saved = total_snaps_saved
+					total_snaps_saved = total_snaps_saved,
+					sent_received_ratio = sent_received_ratio,
+					received_sent_ratio = received_sent_ratio
 				)
 
 			try:
