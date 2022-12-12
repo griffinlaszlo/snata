@@ -10,6 +10,7 @@ from flask_migrate import Migrate, migrate
 from zipfile import ZipFile
 import os
 import json
+import folium
 import random
 
 app = Flask(__name__, template_folder='template')
@@ -147,7 +148,47 @@ class LoginForm(FlaskForm):
 	min=4, max=20)], render_kw={"placeholder": "Password"})
 	submit = SubmitField("Login")
 
+
+
+
+
 # SITE FUNCTIONS app route matches the url bar
+
+
+
+
+@app.route('/testmap', methods=['GET', 'POST'])
+@login_required
+def testmap():
+
+		with open('uploads/json/location_history.json', encoding="utf8") as loc_json:
+			file = json.load(loc_json)
+			coordinates = []		
+			for point in file["Location History"]:
+				x = (point["Latitude, Longitude"].split(" ")[0], point["Latitude, Longitude"].split(" ")[4])
+				coordinates.append(x)
+
+			# delete any duplicate coordinates
+			coordinates = list(dict.fromkeys(coordinates))
+
+			# delete coordinates that are within 100 meters of each other
+			for x in coordinates:
+				for y in coordinates:
+					if x == y:
+						coordinates.remove(y)
+				
+
+			start_coords = (41.71, -86.24)
+			map = folium.Map(location=start_coords, tiles="Stamen Toner", zoom_start=3)
+			for coord in coordinates:
+				folium.Marker( location=[ coord[0], coord[1] ], fill_color='#43d9de', radius=8 ).add_to( map )
+			return map._repr_html_()
+			return render_template('testmap.html', map=map._repr_html_())
+
+
+
+
+
 @app.route('/site', methods=['GET', 'POST'])
 @login_required
 def site():

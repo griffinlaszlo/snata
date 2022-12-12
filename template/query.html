@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>SNATA</title>
     <link rel="stylesheet" href="static/css/site2.css" type="text/css">
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
@@ -18,6 +19,7 @@
                 {% endif %}
             {% endfor %}
         ]);
+
 
         var options = {
             title: 'My Communication Methods',
@@ -57,9 +59,6 @@
                 <div class="image">
                     <br>    
                     <br>
-                    <br>
-                    <br>
-                    <br> 
                 <h2>According to us, you were recently in</h2>
                 <h2><b>{{ post[0]['recent_location'] }}📍</b></h2>
                 <h2>and can frequently be found in</h2>
@@ -69,6 +68,14 @@
                 <br>
                 <h2>Were you at <b>{{ random_location }}?...</b></h2>
                 <h2>We already know 😉 just checking</h2>
+                <form action="{{ url_for('testmap') }}" target="_blank">
+                    <h3>Interested in seeing more?
+                        <br> Click for a map with your</b> locations</b>...
+                        from the last year or so.<br>
+                        <br>
+                        <button class="button-27" type="submit" role="button">SEE MORE</button>
+                       </h3>
+                </form>
                 </div>
             </section>
 
@@ -242,6 +249,8 @@
                     </div>
                 </div>
             </section>
+
+
 
             <section>
                 <div class="image">
