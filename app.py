@@ -600,6 +600,8 @@ def site():
 				engagement_table.discover_stories = discover_stories
 				engagement_table.snaps_to_story = snaps_to_story
 				engagement_table.total_snaps_viewed = total_snaps_viewed
+				engagement_table.snaps_sent = snaps_sent
+				engagement_table.snaps_viewed = snaps_viewed
 				engagement_table.chats_sent = chats_sent
 				engagement_table.chats_viewed = chats_viewed
 				engagement_table.discover_editions = discover_editions
@@ -618,6 +620,8 @@ def site():
 					discover_stories = discover_stories,
 					snaps_to_story = snaps_to_story,
 					total_snaps_viewed = total_snaps_viewed,
+					snaps_sent = snaps_sent,
+					snaps_viewed = snaps_viewed,
 					chats_sent = chats_sent,
 					chats_viewed = chats_viewed,
 					discover_editions = discover_editions,
