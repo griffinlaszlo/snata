@@ -192,6 +192,10 @@ def testmap():
 @app.route('/site', methods=['GET', 'POST'])
 @login_required
 def site():
+	conn = get_db_connection()
+	cursor = conn.cursor()
+	post = cursor.execute(f'SELECT * FROM Users JOIN Chats ON Users.id=Chats.user_id JOIN Engagement ON Chats.user_id=Engagement.users_id WHERE username = "{current_user.username}"').fetchall()
+	conn.close()
 	if request.method == 'POST':
 		file = request.files['data_zip_file']
 
@@ -633,7 +637,7 @@ def site():
 			db.session.commit()
 			return redirect(url_for('query'))
 
-	return render_template('site.html')
+	return render_template('site.html', post=post)
 
 
 @app.route('/loading', methods=['GET', 'POST'])
@@ -729,8 +733,8 @@ def query():
 		first_friend_username= first_friend_username, first5_friends=first5_array, story_string_list=story_string_list, story_array=story_array, 
 		breakdown_list=breakdown_list, engagement_list=engagement_list, data=media_dict, random_location=random_location_array[rand_int])
 	except:
-		error = "Sorry! We couldn't find your zip file please upload a new one"
-		return redirect(url_for('site'), 200)
+		flash("Sorry! We couldn't find your zip file please upload a new one", 'error')
+		return redirect(url_for('site'))
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
