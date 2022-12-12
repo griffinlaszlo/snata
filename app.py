@@ -727,7 +727,7 @@ def query():
 		breakdown_list=breakdown_list, engagement_list=engagement_list, data=media_dict, random_location=random_location_array[rand_int])
 	except:
 		error = "Sorry! We couldn't find your zip file please upload a new one"
-		return render_template('site.html', error=error)
+		return redirect(url_for('site'), 200)
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
