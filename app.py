@@ -730,7 +730,23 @@ def query():
 
 		rand_int = random.randrange(len(random_location_array))
 
+
+		# get location values across the database
+		cursor2 = conn.cursor()
+		query = cursor2.execute(f'SELECT username, creation_time FROM Users JOIN Chats ON Users.id=Chats.user_id JOIN Engagement ON Chats.user_id=Engagement.users_id').fetchall()
+		creation_times = query
+		sort_creation = {}
+		for time in creation_times:
+			sort_creation[f'{time[0]}'] = f'{time[1]}'
+
 		conn.close()
+
+		for key, value in sort_creation.items():
+			if value[0] == " ":
+				value = value[1:]
+			string = value.split(" at exactly ")
+			print(string[0])
+			print(string[1])
 
 		return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, 
 		most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend_name= first_friend_name, 
