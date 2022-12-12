@@ -41,13 +41,13 @@
                 <h2>👋 <b>Hello {{ post[0]['snap_username'] }}</b> 👋
                 <br>
                 <h2><b>Take a 👀 🔙 to when you created your account</b>...</h2>
-                <h2>{{ post[0]['creation_time'] }}</h2>
+                <h2>{{ post[0]['creation_time'] }} ET</h2>
                 <br>
                 <h2><b>Just so you know...</b></h2>
                 <h2>You have sent a total of <b>{{ post[0]['total_snaps_sent'] }}</b> snaps</h2>
                 <h2>You have received a total of <b>{{ post[0]['total_snaps_received'] }} </b> snaps</h2>
                 <h2>You have saved a total of <b>{{ post[0]['total_snaps_saved'] }}</b> snaps</h2>
-                <h2> Your ratio from sent to received is <b>{{ post[0]['total_snaps_sent']/post[0]['total_snaps_received'] }}</b></h2>
+                <h2> You reply to <b>{{ post[0]['sent_received_ratio'] }}%</b> of the snaps that you receive</h2>
                 <br>
                 <br>
                 <h2>This is gonna be <b>fun...</b></h2>
@@ -56,9 +56,7 @@
             </section>
 
             <section>
-                <div class="image">
-                    <br>    
-                    <br>
+                <div class="image"> 
                 <h2>According to us, you were recently in</h2>
                 <h2><b>{{ post[0]['recent_location'] }}📍</b></h2>
                 <h2>and can frequently be found in</h2>
@@ -68,13 +66,14 @@
                 <br>
                 <h2>Were you at <b>{{ random_location }}?...</b></h2>
                 <h2>We already know 😉 just checking</h2>
+                <br>
                 <form action="{{ url_for('testmap') }}" target="_blank">
-                    <h3>Interested in seeing more?
-                        <br> Click for a map with your</b> locations</b>...
+                    <h2>Interested in seeing more?
+                        <br> Click for a <b>map</b> with your</b> locations</b>...
                         from the last year or so.<br>
                         <br>
                         <button class="button-27" type="submit" role="button">SEE MORE</button>
-                       </h3>
+                       </h2>
                 </form>
                 </div>
             </section>
@@ -264,8 +263,8 @@
                 <p>You have sent a total of <b>{{ post[0]['total_snaps_sent'] }}</b> snaps</p>
                 <p>You have received a total of <b>{{ post[0]['total_snaps_received'] }} </b> snaps</p>
                 <p>You have saved a total of <b>{{ post[0]['total_snaps_saved'] }}</b> snaps</p>
-                <p> Your ratio from sent to received is <b>{{ post[0]['total_snaps_sent']/post[0]['total_snaps_received'] }}</b></p>
-                <p> Your ratio from received to sent is <b>{{ post[0]['total_snaps_received']/post[0]['total_snaps_sent'] }}</b></p>
+                <p> Your ratio from sent to received is <b>{{ post[0]['sent_received_ratio'] }}</b></p>
+                <p> Your ratio from received to sent is <b>{{ post[0]['received_sent_ratio'] }}</b></p>
                 <p>You were recently in <b>{{ post[0]['recent_location'] }}📍</b></p>
                 <p>You can frequently be found in <b>{{ freq_locs[0] }}</b></p>
                 <p>Your first frend added was <b>{{ first_friend_name }} @{{ first_friend_username }}</b></p>
