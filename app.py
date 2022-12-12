@@ -214,9 +214,9 @@ def site():
 								hour, minute, second = value.split(' ')[1].split(':')
 								if int(hour) >= 12:
 									hour = str(int(hour) - 12)
-									second += ' PM'
+									second += ' pm'
 								elif int(hour) < 12:
-									second += ' AM'
+									second += ' am'
 								month = months[int(month) - 1]
 								ct = month + " " + day + ", " + year + " at exactly " + hour + ":" + minute + ":" + second
 
@@ -297,10 +297,13 @@ def site():
 				loc_history = json.load(loc_json)
 				for key, value in loc_history.items():
 					if (key == 'Latest Location'):
-						city = value[0]['City'].capitalize()
+						city = value[0]['City'].split(" ")
+						city_str = ""
+						for string in city:
+							city_str = city_str + string.capitalize() + " "
 						region = value[0]['Region'].upper()
 						country = value[0]['Country'].upper()
-						recent_location = city + ", " + region + " in " + country
+						recent_location = city_str.rstrip() + ", " + region + " in " + country
 					elif (key == 'Frequent Locations'):
 						freq_loc = []
 						for location in value:
@@ -309,16 +312,16 @@ def site():
 							for term in city:
 								city_string = city_string + term.capitalize() + " "
 
-							freq_loc.append(city_string)
-							freq_loc.append(location['Country'].upper())
+							freq_loc.append(city_string.rstrip())
 							freq_loc.append(location['Region'].upper())
+							freq_loc.append(location['Country'].upper())
 						freq_loc_string = ""
 						i = 1
 						for loc in freq_loc:
 							if (i % 3 == 2):
-								freq_loc_string = freq_loc_string + loc + ", "
-							if (i % 3 == 1):
 								freq_loc_string = freq_loc_string + loc + " in "
+							if (i % 3 == 1):
+								freq_loc_string = freq_loc_string + loc + ", "
 							if (i % 3 == 0):
 								freq_loc_string = freq_loc_string + loc + " ; "
 							i+=1
