@@ -40,6 +40,7 @@
 				</div>
 			</form>
 		</div>
+		{% if post[0]['sent_received_ratio'] %}
 		<div>
 			<br>
 			<form action="{{ url_for('query') }}">
@@ -51,6 +52,7 @@
 				   </h3>
 			</form>
 		</div>
+		{% endif %}
 		{% if error %}  
         	<h2 class="error"><strong>Error</strong>: {{error}}</h2> 
     	{% endif %}
