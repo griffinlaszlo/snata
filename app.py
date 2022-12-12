@@ -10,6 +10,7 @@ from flask_migrate import Migrate, migrate
 from zipfile import ZipFile
 import os
 import json
+import random
 
 app = Flask(__name__, template_folder='template')
 app.debug = True
@@ -50,6 +51,7 @@ class Users(db.Model, UserMixin):
 	creation_time = db.Column(db.String(50))
 	recent_location = db.Column(db.String(50))
 	frequent_locations = db.Column(db.Text())
+	random_location = db.Column(db.Text())
 
 	# recent_snap = db.Column(db.String(50))
 	# top3_snappers = db.Column(db.String(100))
@@ -250,6 +252,7 @@ def site():
 
 			# latest and frequent locations
 			with open('uploads/json/location_history.json', encoding="utf8") as loc_json:
+				months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 				loc_history = json.load(loc_json)
 				for key, value in loc_history.items():
 					if (key == 'Latest Location'):
@@ -278,6 +281,24 @@ def site():
 							if (i % 3 == 0):
 								freq_loc_string = freq_loc_string + loc + " ; "
 							i+=1
+					elif key == 'Businesses and public places you may have visited':
+						dictionary = {
+    				    	'date': "",
+    				    	'name': "",
+    					}
+						random_location = ""
+						for n in value:
+							for x,y in n.items():
+								if x == 'Name':
+									dictionary['name'] = y
+								if x == 'Date':
+									y = y.split("-")
+									year = y[0]
+									month = months[int(y[1])-1]
+									day = y[2]
+									dictionary['date'] = month + " " + day + ", " + year
+									
+								random_location = random_location + dictionary['name'] + " on " + dictionary['date'] + ";"
 						
 			# 3 most recent received snaps
 			# do 3 people you snap the most next
@@ -470,6 +491,7 @@ def site():
 			user.creation_time = ct
 			user.recent_location = recent_location
 			user.frequent_locations=freq_loc_string
+			user.random_location=random_location
 
 			# user.recent_snap=recent_snap_string
 			# user.top3_snappers=top3_string
@@ -608,6 +630,8 @@ def query():
 		first5_friends = post[0]['first5_friends'].split(",")
 		story_array_string = post[0]['story_array'].split(",")
 
+		random_location_string = post[0]['random_location'].split(";")
+
 		recent_snap = []
 		for snap in recent_snaps:
 			recent_snap.append(snap)
@@ -648,12 +672,18 @@ def query():
 		for friend in story_array_string:
 			story_array.append(friend)
 
+		random_location_array = []
+		for location in random_location_string:
+			random_location_array.append(location)
+
+		rand_int = random.randrange(len(random_location_array))
+
 		conn.close()
 
 		return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, 
 		most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend_name= first_friend_name, 
 		first_friend_username= first_friend_username, first5_friends=first5_array, story_string_list=story_string_list, story_array=story_array, 
-		breakdown_list=breakdown_list, engagement_list=engagement_list, data=media_dict)
+		breakdown_list=breakdown_list, engagement_list=engagement_list, data=media_dict, random_location=random_location_array[rand_int])
 	except:
 		error = "Sorry! We couldn't find your zip file please upload a new one"
 		return render_template('site.html', error=error)
