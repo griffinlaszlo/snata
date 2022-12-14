@@ -119,15 +119,25 @@
             </section>
 
             <section>
-                <div class="image">
-                    <h2>Here are your <b>top 10 sayings</b>...</h2>
-                    <br>
-                    {% for saying in top10_text %}
-                        <h2>{{ saying }}</h2>
-                    {% endfor %}
-
-                    <br>
-                    <br>
+                <div class="row">
+                    <div class="column">
+                        <h2>Here are your <b>top 10 sayings</b>...</h2>
+                        <br>
+                        {% for saying in sent_top10_sayings %}
+                            <h2>{{ saying }}</h2>
+                        {% endfor %}
+                        <br>
+                        <br>
+                    </div>
+                    <div class="column">
+                        <h2>Here are your <b>top 10 RECEIVED sayings</b>...</h2>
+                        <br>
+                        {% for saying in received_top10_sayings %}
+                            <h2>{{ saying }}</h2>
+                        {% endfor %}
+                        <br>
+                        <br>
+                    </div>
                     <h2>Maybe it's time to <b>switch it up</b>...?</h2>
                 </div>
             </section>

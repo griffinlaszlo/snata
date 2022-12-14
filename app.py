@@ -61,6 +61,10 @@ class Users(db.Model, UserMixin):
 
 	media_types = db.Column(db.Text())
 	top10_text = db.Column(db.Text())
+	sent_top10_text = db.Column(db.Text())
+	sent_breakdown = db.Column(db.Text())
+	received_top10_text = db.Column(db.Text())
+	received_breakdown = db.Column(db.Text())
 	story_string = db.Column(db.Text())
 	top5story_string = db.Column(db.Text())
 	
@@ -402,7 +406,10 @@ def site():
 			most_received = ""
 			# most_sent = ""
 			media_types = ""
-			top10_text = ""
+			sent_top10_text = ""
+			sent_breakdown = ""
+			received_top10_text = ""
+			received_breakdown = ""
 			with open('uploads/json/chat_history.json', encoding="utf8") as chat_json:
 				chat_history = json.load(chat_json)
 				def total_snaps(file): 
@@ -419,7 +426,52 @@ def site():
 
 					return total_snaps_sent, total_snaps_received, total_snaps_saved, sent_received_ratio, received_sent_ratio
 
-				total_snaps_sent, total_snaps_received, total_snaps_saved, sent_received_ratio, received_sent_ratio = total_snaps(chat_history)	
+				total_snaps_sent, total_snaps_received, total_snaps_saved, sent_received_ratio, received_sent_ratio = total_snaps(chat_history)
+				
+				sent_saved_list = chat_history['Sent Saved Chat History']
+				sent_text_dict = {}
+				sent_media_dict = {}
+				for i in sent_saved_list:
+					if i["Media Type"] == "TEXT":
+						sent_text_dict[i["Text"]] = sent_text_dict.get(i["Text"], 0) + 1
+						
+					sent_media_dict[i["Media Type"]] = sent_media_dict.get(i["Media Type"], 0) + 1
+
+				#print('Top 10 Text Sayings:')
+				count=0
+				for k, v in sorted(sent_text_dict.items(), key=lambda x: x[1], reverse=True):
+					if k != '':
+						count += 1
+						sent_top10_text = sent_top10_text + str(k) + " " + str(v) + "; "
+						#print(k, v)
+					if count == 10:
+						break
+				#print("Sent Media Break Down")
+				#print(sent_media_dict)
+				for i, j in sent_media_dict.items():
+					sent_breakdown = sent_breakdown + str(i) + " " + str(j) + "; "
+
+				received_saved_list = chat_history['Received Saved Chat History']
+				received_text_dict = {}
+				received_media_dict = {}
+				for i in received_saved_list:
+					if i["Media Type"] == "TEXT":
+						received_text_dict[i["Text"]] = received_text_dict.get(i["Text"], 0) + 1
+						
+					received_media_dict[i["Media Type"]] = received_media_dict.get(i["Media Type"], 0) + 1
+
+				#print('Top 10 Received Text Sayings:')
+				count=0
+				for k, v in sorted(received_text_dict.items(), key=lambda x: x[1], reverse=True):
+					if k != '':
+						count += 1
+						received_top10_text = received_top10_text + str(k) + " " + str(v) + "; "
+					if count == 10:
+						break
+				#print("Received Media Break Down")
+				#print(received_media_dict)
+				for i, j in received_media_dict.items():
+					received_breakdown = received_breakdown + str(i) + " " + str(j) + "; "
 
 				for key, value in chat_history.items():
 					if key == 'Received Saved Chat History':
@@ -445,6 +497,7 @@ def site():
 							media_types = media_types + k + ": " + str(v) + ", "
 
 						count=0
+						top10_text = ""
 						for k, v in sorted(text.items(), key=lambda x: x[1], reverse=True):
 							if k != '':
 								count += 1
@@ -547,6 +600,10 @@ def site():
 
 			user.media_types=media_types
 			user.top10_text=top10_text
+			user.sent_top10_text = sent_top10_text
+			user.sent_breakdown = sent_breakdown
+			user.received_top10_text = received_top10_text
+			user.received_breakdown = received_breakdown
 			user.story_string=story_string
 
 			user.breakdown = breakdown
@@ -684,6 +741,11 @@ def query():
 
 		random_location_string = post[0]['random_location'].split(";")
 
+		sent_sayings = post[0]['sent_top10_text'].split(";")
+		received_sayings = post[0]['received_top10_text'].split(";")
+		sent_breakdown = post[0]['sent_breakdown'].split(";")
+		received_breakdown = post[0]['received_breakdown'].split(";")
+
 		recent_snap = []
 		for snap in recent_snaps:
 			recent_snap.append(snap)
@@ -728,6 +790,22 @@ def query():
 		for location in random_location_string:
 			random_location_array.append(location)
 
+		sent_top10_sayings = []
+		for saying in sent_sayings:
+			sent_top10_sayings.append(saying)
+
+		received_top10_sayings = []
+		for saying in received_sayings:
+			received_top10_sayings.append(saying)
+
+		sent_breakdowns = []
+		for breakdown in sent_breakdown:
+			sent_breakdowns.append(breakdown)
+
+		received_breakdowns = []
+		for breakdown in received_breakdown:
+			received_breakdowns.append(breakdown)
+
 		rand_int = random.randrange(len(random_location_array))
 
 
@@ -751,7 +829,9 @@ def query():
 		return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, 
 		most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend_name= first_friend_name, 
 		first_friend_username= first_friend_username, first5_friends=first5_array, story_string_list=story_string_list, story_array=story_array, 
-		breakdown_list=breakdown_list, engagement_list=engagement_list, data=media_dict, random_location=random_location_array[rand_int])
+		breakdown_list=breakdown_list, engagement_list=engagement_list, data=media_dict, random_location=random_location_array[rand_int],
+		sent_top10_sayings=sent_top10_sayings, received_top10_sayings=received_top10_sayings, sent_breakdowns=sent_breakdowns, 
+		received_breakdowns=received_breakdowns)
 	except:
 		flash("Sorry! We couldn't find your zip file please upload a new one", 'error')
 		return redirect(url_for('site'))
