@@ -444,11 +444,17 @@ def site():
 			most_received = ""
 			media_types = ""
 			sent_top10_text = ""
+<<<<<<< HEAD
 			top10_text=""
 			sent_breakdown=""
 			received_top10_text=""
 			received_breakdown=""
 
+=======
+			sent_breakdown = ""
+			received_top10_text = ""
+			received_breakdown = ""
+>>>>>>> # 3eddb2281ed0c9fb134d3654adeb8f1257fec04e
 			with open('uploads/json/chat_history.json', encoding="utf8") as chat_json:
 				chat_history = json.load(chat_json)
 				def total_snaps(file): 
@@ -465,7 +471,52 @@ def site():
 
 					return total_snaps_sent, total_snaps_received, total_snaps_saved, sent_received_ratio, received_sent_ratio
 
-				total_snaps_sent, total_snaps_received, total_snaps_saved, sent_received_ratio, received_sent_ratio = total_snaps(chat_history)	
+				total_snaps_sent, total_snaps_received, total_snaps_saved, sent_received_ratio, received_sent_ratio = total_snaps(chat_history)
+				
+				sent_saved_list = chat_history['Sent Saved Chat History']
+				sent_text_dict = {}
+				sent_media_dict = {}
+				for i in sent_saved_list:
+					if i["Media Type"] == "TEXT":
+						sent_text_dict[i["Text"]] = sent_text_dict.get(i["Text"], 0) + 1
+						
+					sent_media_dict[i["Media Type"]] = sent_media_dict.get(i["Media Type"], 0) + 1
+
+				#print('Top 10 Text Sayings:')
+				count=0
+				for k, v in sorted(sent_text_dict.items(), key=lambda x: x[1], reverse=True):
+					if k != '':
+						count += 1
+						sent_top10_text = sent_top10_text + str(k) + " " + str(v) + "; "
+						#print(k, v)
+					if count == 10:
+						break
+				#print("Sent Media Break Down")
+				#print(sent_media_dict)
+				for i, j in sent_media_dict.items():
+					sent_breakdown = sent_breakdown + str(i) + " " + str(j) + "; "
+
+				received_saved_list = chat_history['Received Saved Chat History']
+				received_text_dict = {}
+				received_media_dict = {}
+				for i in received_saved_list:
+					if i["Media Type"] == "TEXT":
+						received_text_dict[i["Text"]] = received_text_dict.get(i["Text"], 0) + 1
+						
+					received_media_dict[i["Media Type"]] = received_media_dict.get(i["Media Type"], 0) + 1
+
+				#print('Top 10 Received Text Sayings:')
+				count=0
+				for k, v in sorted(received_text_dict.items(), key=lambda x: x[1], reverse=True):
+					if k != '':
+						count += 1
+						received_top10_text = received_top10_text + str(k) + " " + str(v) + "; "
+					if count == 10:
+						break
+				#print("Received Media Break Down")
+				#print(received_media_dict)
+				for i, j in received_media_dict.items():
+					received_breakdown = received_breakdown + str(i) + " " + str(j) + "; "
 
 
 				sent_saved_list = chat_history['Sent Saved Chat History']
@@ -537,6 +588,7 @@ def site():
 							media_types = media_types + k + ": " + str(v) + ", "
 
 						count=0
+						top10_text = ""
 						for k, v in sorted(text.items(), key=lambda x: x[1], reverse=True):
 							if k != '':
 								count += 1
@@ -639,6 +691,10 @@ def site():
 
 			user.media_types=media_types
 			user.top10_text=top10_text
+			user.sent_top10_text = sent_top10_text
+			user.sent_breakdown = sent_breakdown
+			user.received_top10_text = received_top10_text
+			user.received_breakdown = received_breakdown
 			user.story_string=story_string
 
 			user.breakdown = breakdown
@@ -756,6 +812,7 @@ def loading():
 @login_required
 def query():
 	error = None
+<<<<<<< HEAD
 	# try:
 	conn = get_db_connection()
 	cursor = conn.cursor()
@@ -884,6 +941,128 @@ def query():
 # except:
 	# flash("Sorry! We couldn't find your zip file please upload a new one", 'error')
 	# return redirect(url_for('site'))
+=======
+	try:
+		conn = get_db_connection()
+		cursor = conn.cursor()
+		post = cursor.execute(f'SELECT * FROM Users JOIN Chats ON Users.id=Chats.user_id JOIN Engagement ON Chats.user_id=Engagement.users_id WHERE username = "{current_user.username}"').fetchall()
+		recent_snaps = post[0]['recent_snap'].split(",")
+		recent_locs = post[0]['frequent_locations'].split(";")
+		top3_snaps = post[0]['top3_snappers'].split(",")
+		most_received = post[0]['most_received'].split(",")
+		media_types = post[0]['media_types'].split(",")
+		media_dict = {}
+		media_dict['Media Type'] = 'Amount Sent'
+		for media in media_types:
+			if ':' in media:
+				split = media.split(":")
+				media_dict[split[0].strip()] = int(split[1])
+		top10_text = post[0]['top10_text'].split(";")
+		story_string = post[0]['story_string'].split(",")
+		breakdown_string = post[0]['breakdown'].split(",")
+		engagement_string = post[0]['engagement'].split(",")
+
+		first_friend = post[0]['first_friend'].split(",")
+		first5_friends = post[0]['first5_friends'].split(",")
+		story_array_string = post[0]['story_array'].split(",")
+
+		random_location_string = post[0]['random_location'].split(";")
+
+		sent_sayings = post[0]['sent_top10_text'].split(";")
+		received_sayings = post[0]['received_top10_text'].split(";")
+		sent_breakdown = post[0]['sent_breakdown'].split(";")
+		received_breakdown = post[0]['received_breakdown'].split(";")
+
+		recent_snap = []
+		for snap in recent_snaps:
+			recent_snap.append(snap)
+		freq_locs = []
+		for loc in recent_locs:
+			freq_locs.append(loc)
+		top3_snappers = []
+		for snapper in top3_snaps:
+			top3_snappers.append(snapper)
+		most_received_list = []
+		for received in most_received:
+			most_received_list.append(received)
+		media_types_list = []
+		for media in media_types:
+			media_types_list.append(media)
+		top10_text_list = []
+		for text in top10_text:
+			top10_text_list.append(text)
+		story_string_list = []
+		for string in story_string:
+			story_string_list.append(string)
+
+		breakdown_list = []
+		for breakdown in breakdown_string:
+			breakdown_list.append(breakdown)
+		engagement_list = []
+		for engagement in engagement_string:
+			engagement_list.append(engagement)
+
+		first_friend_name = first_friend[0]
+		first_friend_username = first_friend[1]
+
+		first5_array = []
+		for friend in first5_friends:
+			first5_array.append(friend)
+
+		story_array = []
+		for friend in story_array_string:
+			story_array.append(friend)
+
+		random_location_array = []
+		for location in random_location_string:
+			random_location_array.append(location)
+
+		sent_top10_sayings = []
+		for saying in sent_sayings:
+			sent_top10_sayings.append(saying)
+
+		received_top10_sayings = []
+		for saying in received_sayings:
+			received_top10_sayings.append(saying)
+
+		sent_breakdowns = []
+		for breakdown in sent_breakdown:
+			sent_breakdowns.append(breakdown)
+
+		received_breakdowns = []
+		for breakdown in received_breakdown:
+			received_breakdowns.append(breakdown)
+
+		rand_int = random.randrange(len(random_location_array))
+
+
+		# get location values across the database
+		cursor2 = conn.cursor()
+		query = cursor2.execute(f'SELECT username, creation_time FROM Users JOIN Chats ON Users.id=Chats.user_id JOIN Engagement ON Chats.user_id=Engagement.users_id').fetchall()
+		creation_times = query
+		sort_creation = {}
+		for time in creation_times:
+			sort_creation[f'{time[0]}'] = f'{time[1]}'
+
+		conn.close()
+
+		for key, value in sort_creation.items():
+			if value[0] == " ":
+				value = value[1:]
+			string = value.split(" at exactly ")
+			print(string[0])
+			print(string[1])
+
+		return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, 
+		most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend_name= first_friend_name, 
+		first_friend_username= first_friend_username, first5_friends=first5_array, story_string_list=story_string_list, story_array=story_array, 
+		breakdown_list=breakdown_list, engagement_list=engagement_list, data=media_dict, random_location=random_location_array[rand_int],
+		sent_top10_sayings=sent_top10_sayings, received_top10_sayings=received_top10_sayings, sent_breakdowns=sent_breakdowns, 
+		received_breakdowns=received_breakdowns)
+	except:
+		flash("Sorry! We couldn't find your zip file please upload a new one", 'error')
+		return redirect(url_for('site'))
+>>>>>>> 3eddb2281ed0c9fb134d3654adeb8f1257fec04e
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
