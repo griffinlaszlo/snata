@@ -13,6 +13,9 @@
       <br>
        <div class="form-contatiner">
         <h1>SNATA</h1>
+        <div class="image">
+          <p>Users: {{ post }}</p>
+        </div>
         <form method="POST" action="">
             {{ form.hidden_tag() }}
         <ul class="list centered">
@@ -37,16 +40,7 @@
           {% block content %}{% endblock %}
             </ul>
         </form>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <h2>Users: {{ post }}</h2>
+
        </div>
        <br>
        <br>

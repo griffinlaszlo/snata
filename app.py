@@ -12,6 +12,8 @@ import os
 import json
 import folium
 import random
+from collections import defaultdict
+
 
 app = Flask(__name__, template_folder='template')
 app.debug = True
@@ -61,6 +63,10 @@ class Users(db.Model, UserMixin):
 
 	media_types = db.Column(db.Text())
 	top10_text = db.Column(db.Text())
+	sent_top10_text = db.Column(db.Text())
+	sent_breakdown = db.Column(db.Text())
+	received_top10_text = db.Column(db.Text())
+	received_breakdown = db.Column(db.Text())
 	story_string = db.Column(db.Text())
 	top5story_string = db.Column(db.Text())
 	
@@ -158,34 +164,67 @@ class LoginForm(FlaskForm):
 
 
 @app.route('/testmap', methods=['GET', 'POST'])
-@login_required
 def testmap():
 
 		with open('uploads/json/location_history.json', encoding="utf8") as loc_json:
 			file = json.load(loc_json)
+			dict2 = {
+			"Longitude": '',
+			"Latitude": '',
+			"Statement": '',
+			}
+
 			coordinates = []		
+			months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+			statement_dict = defaultdict(list)
 			for point in file["Location History"]:
 				x = (point["Latitude, Longitude"].split(" ")[0], point["Latitude, Longitude"].split(" ")[4])
-				coordinates.append(x)
+				date = point["Time"].split(" ")[0]
+				time = point["Time"].split(" ")[1]
+				month = date.split("/")[1]
+				month = months[int(month) - 1]
+				day = date.split("/")[2]
+				year = date.split("/")[0]
+				date = month + " " + day + ", " + year
+				statement = f'Your location was recorded at {time} on {date}'
+				dict2["Longitude"] == x[0]
+				dict2["Latitude"] == x[1]
+				dict2["Statement"] == statement
+				longstr = x[0]
+				latstr = x[1]
+				longstr = longstr[:len(longstr)-2]
+				latstr = latstr[:len(latstr)-2]
+				temp = {
+					"Longitude": longstr,
+					"Latitude": latstr,
+				}
 
-			# delete any duplicate coordinates
-			coordinates = list(dict.fromkeys(coordinates))
+				if temp not in coordinates:
+					coordinates.append(temp)
 
-			# delete coordinates that are within 100 meters of each other
+				tempkey = f'{longstr} {latstr}'
+				statement_dict[tempkey].append(statement)
+
 			for x in coordinates:
-				for y in coordinates:
-					if x == y:
-						coordinates.remove(y)
-				
+				tempkey = f'{x["Longitude"]} {x["Latitude"]}'
 
+				
 			start_coords = (41.71, -86.24)
 			map = folium.Map(location=start_coords, tiles="Stamen Toner", zoom_start=3)
-			for coord in coordinates:
-				folium.Marker( location=[ coord[0], coord[1] ], fill_color='#43d9de', radius=8 ).add_to( map )
+
+			for x in coordinates:
+				tempkey = f'{x["Longitude"]} {x["Latitude"]}'
+				html=f"""
+        		<p> {statement_dict[tempkey][0]}</p>
+        		
+				"""
+				iframe = folium.IFrame(html=html, width=420, height=40)
+				popup = folium.Popup(iframe, max_width=2650)
+				folium.Marker(location=[ x["Longitude"], x["Latitude"] ], popup=popup, fill_color='#43d9de', radius=8 ).add_to( map )
+
+
 			return map._repr_html_()
 			return render_template('testmap.html', map=map._repr_html_())
-
-
 
 
 
@@ -225,6 +264,8 @@ def site():
 								ct = month + " " + day + ", " + year + " at exactly " + hour + ":" + minute + ":" + second
 
 					if (key == 'Engagement'):
+						geofilter_used = ""
+						snaps_to_story = ""
 						for n in value:
 							event = n["Event"]
 							occurrences = n["Occurrences"]
@@ -235,7 +276,7 @@ def site():
 								discover_stories = occurrences
             				    #print('...viewed ' + str(occurrences) + ' Discover Stories.')
 							if event == 'Snaps Posted to Story':
-								snaps_to_story = occurrences
+									snaps_to_story = occurrences
             				    #print('...posted ' + str(occurrences) + ' Snaps to your Story.')
 							if event == 'Snaps Viewed in a Story':
 								total_snaps_viewed = occurrences
@@ -275,6 +316,7 @@ def site():
             				    #print('...swiped ' + str(occurrences) + ' Geolens Snaps.')
 							if event == 'Geofilter Snaps Posted to Story':
 								geofilter_used = occurrences
+
             				    #print('...posted ' + str(occurrences) + ' Geofilter Snaps to your Story.')
 							if event == 'Geofilter Swipes':
 								geofilter_swipes = occurrences
@@ -400,9 +442,13 @@ def site():
 				top3_string = top3_string[:-2]
 
 			most_received = ""
-			# most_sent = ""
 			media_types = ""
-			top10_text = ""
+			sent_top10_text = ""
+			top10_text=""
+			sent_breakdown=""
+			received_top10_text=""
+			received_breakdown=""
+
 			with open('uploads/json/chat_history.json', encoding="utf8") as chat_json:
 				chat_history = json.load(chat_json)
 				def total_snaps(file): 
@@ -420,6 +466,52 @@ def site():
 					return total_snaps_sent, total_snaps_received, total_snaps_saved, sent_received_ratio, received_sent_ratio
 
 				total_snaps_sent, total_snaps_received, total_snaps_saved, sent_received_ratio, received_sent_ratio = total_snaps(chat_history)	
+
+
+				sent_saved_list = chat_history['Sent Saved Chat History']
+				sent_text_dict = {}
+				sent_media_dict = {}
+				for i in sent_saved_list:
+					if i["Media Type"] == "TEXT":
+						sent_text_dict[i["Text"]] = sent_text_dict.get(i["Text"], 0) + 1
+						
+					sent_media_dict[i["Media Type"]] = sent_media_dict.get(i["Media Type"], 0) + 1
+
+				#print('Top 10 Text Sayings:')
+				count=0
+				for k, v in sorted(sent_text_dict.items(), key=lambda x: x[1], reverse=True):
+					if k != '':
+						count += 1
+						sent_top10_text = sent_top10_text + str(k) + " " + str(v) + "; "
+						#print(k, v)
+					if count == 10:
+						break
+				#print("Sent Media Break Down")
+				#print(sent_media_dict)
+				for i, j in sent_media_dict.items():
+					sent_breakdown = sent_breakdown + str(i) + " " + str(j) + "; "
+
+				received_saved_list = chat_history['Received Saved Chat History']
+				received_text_dict = {}
+				received_media_dict = {}
+				for i in received_saved_list:
+					if i["Media Type"] == "TEXT":
+						received_text_dict[i["Text"]] = received_text_dict.get(i["Text"], 0) + 1
+						
+					received_media_dict[i["Media Type"]] = received_media_dict.get(i["Media Type"], 0) + 1
+
+				#print('Top 10 Received Text Sayings:')
+				count=0
+				for k, v in sorted(received_text_dict.items(), key=lambda x: x[1], reverse=True):
+					if k != '':
+						count += 1
+						received_top10_text = received_top10_text + str(k) + " " + str(v) + "; "
+					if count == 10:
+						break
+				#print("Received Media Break Down")
+				#print(received_media_dict)
+				for i, j in received_media_dict.items():
+					received_breakdown = received_breakdown + str(i) + " " + str(j) + "; "
 
 				for key, value in chat_history.items():
 					if key == 'Received Saved Chat History':
@@ -556,7 +648,7 @@ def site():
 			user.name_changes = name_changes
 
 			user.link_to_memory = link_to_memory
-			user.first_memory_string =  first_memory_string
+			user.first_memory_string = first_memory_string
 
 			user.total_subs = total_subs
 			user.stories = stories
@@ -570,6 +662,12 @@ def site():
 			user.first_friend = first_friend
 			user.first5_friends = first_friend_string
 			user.story_array = story_array_string
+
+			user.sent_top10_text=sent_top10_text
+			user.received_top10_text=received_top10_text
+			user.sent_breakdown=sent_breakdown
+			user.received_breakdown=received_breakdown
+
 
 			try:
 				chats = Chats.query.filter_by(user_id=user.id).first()
@@ -658,103 +756,134 @@ def loading():
 @login_required
 def query():
 	error = None
-	try:
-		conn = get_db_connection()
-		cursor = conn.cursor()
-		post = cursor.execute(f'SELECT * FROM Users JOIN Chats ON Users.id=Chats.user_id JOIN Engagement ON Chats.user_id=Engagement.users_id WHERE username = "{current_user.username}"').fetchall()
-		recent_snaps = post[0]['recent_snap'].split(",")
-		recent_locs = post[0]['frequent_locations'].split(";")
-		top3_snaps = post[0]['top3_snappers'].split(",")
-		most_received = post[0]['most_received'].split(",")
-		media_types = post[0]['media_types'].split(",")
-		media_dict = {}
-		media_dict['Media Type'] = 'Amount Sent'
-		for media in media_types:
-			if ':' in media:
-				split = media.split(":")
-				media_dict[split[0].strip()] = int(split[1])
-		top10_text = post[0]['top10_text'].split(";")
-		story_string = post[0]['story_string'].split(",")
-		breakdown_string = post[0]['breakdown'].split(",")
-		engagement_string = post[0]['engagement'].split(",")
+	# try:
+	conn = get_db_connection()
+	cursor = conn.cursor()
+	post = cursor.execute(f'SELECT * FROM Users JOIN Chats ON Users.id=Chats.user_id JOIN Engagement ON Chats.user_id=Engagement.users_id WHERE username = "{current_user.username}"').fetchall()
+	recent_snaps = post[0]['recent_snap'].split(",")
+	recent_locs = post[0]['frequent_locations'].split(";")
+	top3_snaps = post[0]['top3_snappers'].split(",")
+	most_received = post[0]['most_received'].split(",")
+	media_types = post[0]['media_types'].split(",")
+	media_dict = {}
+	media_dict['Media Type'] = 'Amount Sent'
+	for media in media_types:
+		if ':' in media:
+			split = media.split(":")
+			media_dict[split[0].strip()] = int(split[1])
+	top10_text = post[0]['top10_text'].split(";")
+	story_string = post[0]['story_string'].split(",")
 
-		first_friend = post[0]['first_friend'].split(",")
-		first5_friends = post[0]['first5_friends'].split(",")
-		story_array_string = post[0]['story_array'].split(",")
+	breakdown_string = post[0]['breakdown'].split(",")
+	breakdown_dict = {}
+	breakdown_dict['App Feature'] = 'Percentage of Time Spent'
+	for feature in breakdown_string:
+		if ':' in feature:
+			split = feature.split(":")
+			print(float(split[1][:-1]))
+			breakdown_dict[split[0].strip()] = float(split[1][:-1])
+	engagement_string = post[0]['engagement'].split(",")
 
-		random_location_string = post[0]['random_location'].split(";")
+	first_friend = post[0]['first_friend'].split(",")
+	first5_friends = post[0]['first5_friends'].split(",")
+	story_array_string = post[0]['story_array'].split(",")
 
-		recent_snap = []
-		for snap in recent_snaps:
-			recent_snap.append(snap)
-		freq_locs = []
-		for loc in recent_locs:
-			freq_locs.append(loc)
-		top3_snappers = []
-		for snapper in top3_snaps:
-			top3_snappers.append(snapper)
-		most_received_list = []
-		for received in most_received:
-			most_received_list.append(received)
-		media_types_list = []
-		for media in media_types:
-			media_types_list.append(media)
-		top10_text_list = []
-		for text in top10_text:
-			top10_text_list.append(text)
-		story_string_list = []
-		for string in story_string:
-			story_string_list.append(string)
+	random_location_string = post[0]['random_location'].split(";")
 
-		breakdown_list = []
-		for breakdown in breakdown_string:
-			breakdown_list.append(breakdown)
-		engagement_list = []
-		for engagement in engagement_string:
-			engagement_list.append(engagement)
+	sent_sayings = post[0]['sent_top10_text'].split(";")
+	received_sayings = post[0]['received_top10_text'].split(";")
+	sent_breakdown = post[0]['sent_breakdown'].split(";")
+	received_breakdown = post[0]['received_breakdown'].split(";")
 
-		first_friend_name = first_friend[0]
-		first_friend_username = first_friend[1]
+	recent_snap = []
+	for snap in recent_snaps:
+		recent_snap.append(snap)
+	freq_locs = []
+	for loc in recent_locs:
+		freq_locs.append(loc)
+	top3_snappers = []
+	for snapper in top3_snaps:
+		top3_snappers.append(snapper)
+	most_received_list = []
+	for received in most_received:
+		most_received_list.append(received)
+	media_types_list = []
+	for media in media_types:
+		media_types_list.append(media)
+	top10_text_list = []
+	for text in top10_text:
+		top10_text_list.append(text)
+	story_string_list = []
+	for string in story_string:
+		story_string_list.append(string)
 
-		first5_array = []
-		for friend in first5_friends:
-			first5_array.append(friend)
+	breakdown_list = []
+	for breakdown in breakdown_string:
+		breakdown_list.append(breakdown)
+	engagement_list = []
+	for engagement in engagement_string:
+		engagement_list.append(engagement)
 
-		story_array = []
-		for friend in story_array_string:
-			story_array.append(friend)
+	first_friend_name = first_friend[0]
+	first_friend_username = first_friend[1]
 
-		random_location_array = []
-		for location in random_location_string:
-			random_location_array.append(location)
+	first5_array = []
+	for friend in first5_friends:
+		first5_array.append(friend)
 
-		rand_int = random.randrange(len(random_location_array))
+	story_array = []
+	for friend in story_array_string:
+		story_array.append(friend)
+
+	random_location_array = []
+	for location in random_location_string:
+		random_location_array.append(location)
+
+	sent_top10_sayings = []
+	for saying in sent_sayings:
+		sent_top10_sayings.append(saying)
+
+	received_top10_sayings = []
+	for saying in received_sayings:
+		received_top10_sayings.append(saying)
+
+	sent_breakdowns = []
+	for breakdown in sent_breakdown:
+		sent_breakdowns.append(breakdown)
+
+	received_breakdowns = []
+	for breakdown in received_breakdown:
+		received_breakdowns.append(breakdown)
+
+	
+	rand_int = random.randrange(len(random_location_array))
 
 
-		# get location values across the database
-		cursor2 = conn.cursor()
-		query = cursor2.execute(f'SELECT username, creation_time FROM Users JOIN Chats ON Users.id=Chats.user_id JOIN Engagement ON Chats.user_id=Engagement.users_id').fetchall()
-		creation_times = query
-		sort_creation = {}
-		for time in creation_times:
-			sort_creation[f'{time[0]}'] = f'{time[1]}'
+	# get location values across the database
+	cursor2 = conn.cursor()
+	query = cursor2.execute(f'SELECT username, creation_time FROM Users JOIN Chats ON Users.id=Chats.user_id JOIN Engagement ON Chats.user_id=Engagement.users_id').fetchall()
+	creation_times = query
+	sort_creation = {}
+	for time in creation_times:
+		sort_creation[f'{time[0]}'] = f'{time[1]}'
 
-		conn.close()
+	conn.close()
 
-		for key, value in sort_creation.items():
-			if value[0] == " ":
-				value = value[1:]
-			string = value.split(" at exactly ")
-			print(string[0])
-			print(string[1])
+	for key, value in sort_creation.items():
+		if value[0] == " ":
+			value = value[1:]
+		string = value.split(" at exactly ")
+		print(string[0])
+		print(string[1])
 
-		return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, 
-		most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend_name= first_friend_name, 
-		first_friend_username= first_friend_username, first5_friends=first5_array, story_string_list=story_string_list, story_array=story_array, 
-		breakdown_list=breakdown_list, engagement_list=engagement_list, data=media_dict, random_location=random_location_array[rand_int])
-	except:
-		flash("Sorry! We couldn't find your zip file please upload a new one", 'error')
-		return redirect(url_for('site'))
+	return render_template('query.html', post=post, recent_snaps=recent_snap, freq_locs=freq_locs, top3_snappers=top3_snappers, 
+	most_received=most_received_list, media_types=media_types_list, top10_text=top10_text_list, first_friend_name= first_friend_name, 
+	first_friend_username= first_friend_username, first5_friends=first5_array, story_string_list=story_string_list, story_array=story_array, 
+	breakdown_list=breakdown_list, engagement_list=engagement_list, data=media_dict, breakdown_data=breakdown_dict, random_location=random_location_array[rand_int], 
+	sent_top10_sayings=sent_top10_sayings, received_top10_sayings=received_top10_sayings, sent_breakdowns=sent_breakdowns, received_breakdowns=received_breakdowns)
+# except:
+	# flash("Sorry! We couldn't find your zip file please upload a new one", 'error')
+	# return redirect(url_for('site'))
 
 def get_db_connection():
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
